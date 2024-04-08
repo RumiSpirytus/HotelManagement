@@ -1,1 +1,2 @@
-/server/fastapienv
+/server/.env
+.venv
