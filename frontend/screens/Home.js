@@ -23,12 +23,20 @@ import { useState } from "react";
 
 export default function Home() {
     const [receiveDate, setReceiveDate] = useState(new Date());
-    const [show, setShow] = useState(false);
+    const [checkoutDate, setCheckoutDate] = useState(new Date());
+    const [checkinShow, setCheckinShow] = useState(false);
+    const [checkoutShow, setCheckoutShow] = useState(false);
 
-    const onChange = (event, selectedDate) => {
+    const onReceiveChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        setShow(!show);
+        setCheckinShow(!checkinShow);
         setReceiveDate(currentDate);
+    };
+
+    const onCheckoutChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setCheckoutShow(!checkoutShow);
+        setCheckoutDate(currentDate);
     };
 
     return (
@@ -68,15 +76,15 @@ export default function Home() {
                                             value={receiveDate
                                                 .toISOString()
                                                 .substring(0, 10)}
-                                            onTouchStart={() => setShow(true)}
+                                            onTouchStart={() => setCheckinShow(true)}
                                         />
-                                        {show && (
+                                        {checkinShow && (
                                             <DateTimePicker
                                                 testID="dateTimePicker"
                                                 value={receiveDate}
                                                 mode="date"
                                                 display="default"
-                                                onChange={onChange}
+                                                onChange={onReceiveChange}
                                             />
                                         )}
                                         <FormControl.ErrorMessage
@@ -116,12 +124,25 @@ export default function Home() {
 
                                     <Stack mx="">
                                         <FormControl.Label>
-                                            Số người ở
+                                            Ngày trả phòng
                                         </FormControl.Label>
                                         <Input
-                                            type="number"
-                                            placeholder="Nhập số lượng"
+                                            type="date"
+                                            placeholder="Nhập ngày trả phòng"
+                                            value={checkoutDate
+                                                .toISOString()
+                                                .substring(0, 10)}
+                                            onTouchStart={() => setCheckoutShow(true)}
                                         />
+                                        {checkoutShow && (
+                                            <DateTimePicker
+                                                testID="dateTimePicker"
+                                                value={checkoutDate}
+                                                mode="date"
+                                                display="default"
+                                                onChange={onCheckoutChange}
+                                            />
+                                        )}
                                         <FormControl.ErrorMessage
                                             leftIcon={
                                                 <WarningOutlineIcon size="xs" />
@@ -131,7 +152,7 @@ export default function Home() {
 
                                     <Stack mx="">
                                         <FormControl.Label>
-                                            Số ngày ở
+                                            Số phòng trống
                                         </FormControl.Label>
                                         <Input
                                             type="date"
