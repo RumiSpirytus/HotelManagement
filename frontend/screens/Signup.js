@@ -13,10 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import Button from "../components/Button";
 
-const Login = ({ navigation }) => {
+const Signup = ({ navigation }) => {
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <View style={{ flex: 1, marginHorizontal: 22 }}>
@@ -29,7 +28,7 @@ const Login = ({ navigation }) => {
                             color: COLORS.black,
                         }}
                     >
-                        Chào mừng ! 👋
+                        Đăng ký
                     </Text>
                 </View>
 
@@ -62,6 +61,53 @@ const Login = ({ navigation }) => {
                             keyboardType="email-address"
                             style={{
                                 width: "100%",
+                            }}
+                        />
+                    </View>
+                </View>
+
+                <View style={{ marginBottom: 12 }}>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 400,
+                            marginVertical: 8,
+                        }}
+                    >
+                        Số điện thoại
+                    </Text>
+
+                    <View
+                        style={{
+                            width: "100%",
+                            height: 48,
+                            borderColor: COLORS.black,
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            alignItems: "center",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingLeft: 22,
+                        }}
+                    >
+                        <TextInput
+                            placeholder="+84"
+                            placeholderTextColor={COLORS.black}
+                            keyboardType="numeric"
+                            style={{
+                                width: "12%",
+                                borderRightWidth: 1,
+                                borderLeftColor: COLORS.grey,
+                                height: "100%",
+                            }}
+                        />
+
+                        <TextInput
+                            placeholder="Nhập số điện thoại của bạn"
+                            placeholderTextColor={COLORS.black}
+                            keyboardType="numeric"
+                            style={{
+                                width: "80%",
                             }}
                         />
                     </View>
@@ -136,11 +182,11 @@ const Login = ({ navigation }) => {
                         color={isChecked ? COLORS.primary : undefined}
                     />
 
-                    <Text>Nhớ mật khẩu</Text>
+                    <Text>Tôi đồng ý với các điều khoản</Text>
                 </View>
 
                 <Button
-                    title="Đăng nhập"
+                    title="Đăng ký"
                     filled
                     style={{
                         marginTop: 18,
@@ -163,7 +209,7 @@ const Login = ({ navigation }) => {
                             marginHorizontal: 10,
                         }}
                     />
-                    <Text style={{ fontSize: 14 }}>Hoặc đăng nhập với</Text>
+                    <Text style={{ fontSize: 14 }}>Hoặc đăng ký với</Text>
                     <View
                         style={{
                             flex: 1,
@@ -243,9 +289,9 @@ const Login = ({ navigation }) => {
                     }}
                 >
                     <Text style={{ fontSize: 16, color: COLORS.black }}>
-                        Bạn chưa có tài khoản?{" "}
+                        Bạn đã có tài khoản?
                     </Text>
-                    <Pressable onPress={() => navigation.navigate("Signup")}>
+                    <Pressable onPress={() => navigation.navigate("Login")}>
                         <Text
                             style={{
                                 fontSize: 16,
@@ -254,7 +300,7 @@ const Login = ({ navigation }) => {
                                 marginLeft: 6,
                             }}
                         >
-                            Đăng ký
+                            Đăng nhập
                         </Text>
                     </Pressable>
                 </View>
@@ -263,4 +309,4 @@ const Login = ({ navigation }) => {
     );
 };
 
-export default Login;
+export default Signup;
