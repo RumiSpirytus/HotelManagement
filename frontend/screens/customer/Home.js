@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from "react-native";
+import { View, Text } from "react-native";
 import { styled } from "nativewind";
 
 const StyledView = styled(View);
@@ -12,7 +12,6 @@ import {
     Input,
     WarningOutlineIcon,
     ScrollView,
-    // Image,
 } from "native-base";
 
 import { Image } from "react-native";
@@ -21,7 +20,33 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { useState } from "react";
 
-export default function Home() {
+import PopularHotel from "../../components/customer/PopularHotel";
+
+const popular_hotels = [
+    {
+        id: 1,
+        image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
+        name: "Granda Legend",
+        address: "Cầu Giấy",
+        price: 495000,
+    },
+    {
+        id: 2,
+        image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
+        name: "Granda Legend",
+        address: "Cầu Giấy",
+        price: 495000,
+    },
+    {
+        id: 3,
+        image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
+        name: "Granda Legend",
+        address: "Cầu Giấy",
+        price: 495000,
+    },
+];
+
+export default function Home({navigation}) {
     const [receiveDate, setReceiveDate] = useState(new Date());
     const [checkoutDate, setCheckoutDate] = useState(new Date());
     const [checkinShow, setCheckinShow] = useState(false);
@@ -76,7 +101,9 @@ export default function Home() {
                                             value={receiveDate
                                                 .toISOString()
                                                 .substring(0, 10)}
-                                            onTouchStart={() => setCheckinShow(true)}
+                                            onTouchStart={() =>
+                                                setCheckinShow(true)
+                                            }
                                         />
                                         {checkinShow && (
                                             <DateTimePicker
@@ -132,7 +159,9 @@ export default function Home() {
                                             value={checkoutDate
                                                 .toISOString()
                                                 .substring(0, 10)}
-                                            onTouchStart={() => setCheckoutShow(true)}
+                                            onTouchStart={() =>
+                                                setCheckoutShow(true)
+                                            }
                                         />
                                         {checkoutShow && (
                                             <DateTimePicker
@@ -175,14 +204,14 @@ export default function Home() {
                 </StyledView>
 
                 {/* Tìm kiếm gần đây  */}
-                <ScrollView horizontal>
-                    <StyledView className="flex flex-col gap-y-1 p-4">
-                        <StyledView>
-                            <StyledText className=" text-lg font-semibold">
-                                Tìm kiếm gần đây
-                            </StyledText>
-                        </StyledView>
+                {/* <StyledView className="flex flex-col gap-y-1 p-4">
+                    <StyledView>
+                        <StyledText className=" text-lg font-semibold">
+                            Tìm kiếm gần đây
+                        </StyledText>
+                    </StyledView>
 
+                    <ScrollView horizontal>
                         <StyledView className="flex flex-row gap-4">
                             <StyledView className="bg-white p-4 rounded-lg shadow-lg">
                                 <StyledText className="font-semibold">
@@ -205,8 +234,8 @@ export default function Home() {
                                 </StyledText>
                             </StyledView>
                         </StyledView>
-                    </StyledView>
-                </ScrollView>
+                    </ScrollView>
+                </StyledView> */}
 
                 {/* khách sạn phổ biến */}
                 <StyledView className="flex flex-col gap-4 p-4">
@@ -218,91 +247,17 @@ export default function Home() {
 
                     <ScrollView horizontal>
                         <StyledView className="flex flex-row">
-                            <StyledView className="flex items-center bg-white mr-4">
-                                <StyledView className="mb-2">
-                                    <Image
-                                        source={{
-                                            uri: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
-                                        }}
-                                        style={{ width: 120, height: 120 }}
-                                    />
-                                </StyledView>
-                                <StyledView className="flex items-center gap-1 pb-2">
-                                    <StyledText className="font-semibold">
-                                        Granda Legend
-                                    </StyledText>
-                                    <StyledText className="">
-                                        Cầu Giấy
-                                    </StyledText>
-                                    <StyledText className="">
-                                        495.000 VNĐ
-                                    </StyledText>
-                                </StyledView>
-                            </StyledView>
-
-                            <StyledView className="flex items-center bg-white mr-4">
-                                <StyledView className="mb-2">
-                                    <Image
-                                        source={{
-                                            uri: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ed/95/07/limak-eurasia-luxury.jpg?w=700&h=-1&s=1",
-                                        }}
-                                        style={{ width: 120, height: 120 }}
-                                    />
-                                </StyledView>
-                                <StyledView className="flex items-center gap-1 pb-2">
-                                    <StyledText className="font-semibold">
-                                        Dream Central
-                                    </StyledText>
-                                    <StyledText className="">Tây Hồ</StyledText>
-                                    <StyledText className="">
-                                        495.000 VNĐ
-                                    </StyledText>
-                                </StyledView>
-                            </StyledView>
-
-                            <StyledView className="flex items-center bg-white mr-4">
-                                <StyledView className="mb-2">
-                                    <Image
-                                        source={{
-                                            uri: "https://artishotel.vn/wp-content/uploads/2021/12/artishotel.png",
-                                        }}
-                                        style={{ width: 120, height: 120 }}
-                                    />
-                                </StyledView>
-                                <StyledView className="flex items-center gap-1 pb-2">
-                                    <StyledText className="font-semibold">
-                                        Hanoi Victor
-                                    </StyledText>
-                                    <StyledText className="">
-                                        Ba Đình
-                                    </StyledText>
-                                    <StyledText className="">
-                                        495.000 VNĐ
-                                    </StyledText>
-                                </StyledView>
-                            </StyledView>
-
-                            <StyledView className="flex items-center bg-white mr-4">
-                                <StyledView className="mb-2">
-                                    <Image
-                                        source={{
-                                            uri: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
-                                        }}
-                                        style={{ width: 120, height: 120 }}
-                                    />
-                                </StyledView>
-                                <StyledView className="flex items-center gap-1 pb-2">
-                                    <StyledText className="font-semibold">
-                                        Granda Legend
-                                    </StyledText>
-                                    <StyledText className="">
-                                        Cầu Giấy
-                                    </StyledText>
-                                    <StyledText className="">
-                                        495.000 VNĐ
-                                    </StyledText>
-                                </StyledView>
-                            </StyledView>
+                            {popular_hotels.map((hotel) => (
+                                <PopularHotel
+                                    key={hotel.id}
+                                    image={hotel.image}
+                                    name={hotel.name}
+                                    address={hotel.address}
+                                    price={hotel.price}
+                                    navigation={navigation}
+                                    id={hotel.id}
+                                />
+                            ))}
                         </StyledView>
                     </ScrollView>
                 </StyledView>

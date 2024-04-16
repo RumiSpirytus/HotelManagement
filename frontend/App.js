@@ -3,9 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
-import Home from "./screens/Home";
-import Login from "./screens/Login";
-import Signup from "./screens/Signup";
+import Home from "./screens/customer/Home";
+import RoomDetail from "./screens/customer/RoomDetail";
 
 import { NativeBaseProvider } from "native-base";
 
@@ -21,11 +20,19 @@ export default function App() {
     return (
         <NativeBaseProvider>
             <NavigationContainer>
-                {/* <Stack.Navigator initialRouteName="Home">
-                    <Stack.Screen name="Signup" component={Signup} />
-                    <Stack.Screen name="MyTabs" component={MyTabs} />
-                </Stack.Navigator> */}
-                <MyTabs />
+                <Stack.Navigator initialRouteName="Home">
+                    <Stack.Screen
+                        name="Home"
+                        component={Home}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="RoomDetail"
+                        component={RoomDetail}
+                        options={{  title: 'Xem phòng'}}
+                    />
+                </Stack.Navigator>
+                {/* <MyTabs /> */}
             </NavigationContainer>
         </NativeBaseProvider>
     );
@@ -39,7 +46,7 @@ function MyTabs() {
                 tabBarInactiveTintColor: "gray",
                 tabBarStyle: {
                     backgroundColor: "#fff",
-                    height: 50, // Adjust this value to change the height of the tab bar
+                    height: 50,
                 },
             }}
         >
@@ -51,34 +58,6 @@ function MyTabs() {
                     tabBarIcon: () => (
                         <MaterialCommunityIcons
                             name="home"
-                            color="#000"
-                            size={20}
-                        />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Login"
-                component={Login}
-                options={{
-                    tabBarLabel: "Đăng nhập",
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialCommunityIcons
-                            name="login"
-                            color="#000"
-                            size={20}
-                        />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Signup"
-                component={Signup}
-                options={{
-                    tabBarLabel: "Đăng ký",
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialCommunityIcons
-                            name="account-plus"
                             color="#000"
                             size={20}
                         />
