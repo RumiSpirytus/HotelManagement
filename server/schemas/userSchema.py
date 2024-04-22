@@ -16,3 +16,10 @@ class UserSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserLoginSchema(BaseModel):
+    email: str
+    password: str
+
+    class Config:
+        orm_mode = True

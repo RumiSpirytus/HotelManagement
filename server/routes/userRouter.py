@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from controllers.userController import UserController
-from schemas.userSchema import UserSchema
+from schemas.userSchema import UserSchema, UserLoginSchema
 from sqlalchemy.orm import Session
 from database import get_db
 from models.user import User
@@ -9,7 +9,7 @@ import uuid
 
 router = APIRouter(prefix="/user", tags=["User"], responses={404: {"description": "Not found"}})
 
-@router.post("/")
+@router.post("/register")
 async def create_new_user(user: UserSchema, db: Session = Depends(get_db)):
     #check if user already exists
     db_user = db.query(User).filter(User.email == user.email).first()
@@ -38,3 +38,8 @@ async def get_user_by_id(id: uuid.UUID, db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+#login
+@router.post("/login")
+async def login(user: UserLoginSchema, db: Session = Depends(get_db)):
+    return UserController.login(user, db)

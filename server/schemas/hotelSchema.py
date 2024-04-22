@@ -1,31 +1,30 @@
-from datetime import datetime
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional
+from datetime import datetime
 
-class RoomSchema(BaseModel):
+
+class HotelSchema(BaseModel):
+    manager_id: str
     name: str
+    description: str
     logo: str
-    images: List[str]
-    room_detail: str
-    service: List[dict]
+    images: list
+    address: str
     rating: float
-    price: str
-    hotel_id: str
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
     class Config:
         orm_mode = True
 
-class RoomUpdateSchema(BaseModel):
+class HotelUpdateSchema(BaseModel):
+    manager_id: Optional[str]
     name: Optional[str]
+    description: Optional[str]
     logo: Optional[str]
-    images: Optional[List[str]]
-    room_detail: Optional[str]
-    service: Optional[List[dict]]
+    images: Optional[list]
+    address: Optional[str]
     rating: Optional[float]
-    price: Optional[str]
-    hotel_id: Optional[str]
     created_at: Optional[datetime]
     updated_at: datetime = datetime.now()
 

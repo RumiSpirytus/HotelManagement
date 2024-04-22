@@ -18,9 +18,11 @@ import { Image } from "react-native";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import PopularHotel from "../../components/customer/PopularHotel";
+
+import axios from "axios";
 
 const popular_hotels = [
     {
@@ -46,7 +48,7 @@ const popular_hotels = [
     },
 ];
 
-export default function Home({navigation}) {
+export default function Home({ navigation }) {
     const [receiveDate, setReceiveDate] = useState(new Date());
     const [checkoutDate, setCheckoutDate] = useState(new Date());
     const [checkinShow, setCheckinShow] = useState(false);

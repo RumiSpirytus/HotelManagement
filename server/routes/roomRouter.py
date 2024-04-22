@@ -23,8 +23,8 @@ async def get_room_by_id(id: uuid.UUID, db: Session = Depends(get_db)):
 
 @router.put("/{id}")
 async def update_room(id: uuid.UUID, room: RoomUpdateSchema, db: Session = Depends(get_db)):
-    rom = RoomController.getRoomById(id, db)
-    if room is None:
+    existedRoom = RoomController.getRoomById(id, db)
+    if existedRoom is None:
         raise HTTPException(status_code=404, detail="Room not found")
     return RoomController.updateRoom(id, room, db)
 

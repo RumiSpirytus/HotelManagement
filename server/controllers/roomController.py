@@ -22,6 +22,7 @@ class RoomController:
             service=room.service,
             rating=room.rating,
             price=room.price,
+            hotel_id=room.hotel_id,
             created_at=room.created_at,
             updated_at=room.updated_at,
         )
@@ -45,6 +46,8 @@ class RoomController:
             db_room.room_detail = room.room_detail
         if room.service is not None:
             db_room.service = room.service
+        if room.hotel_id is not None:
+            db_room.hotel_id = room.hotel_id
 
         db_room.updated_at = datetime.now(utc)      
         db.commit()
