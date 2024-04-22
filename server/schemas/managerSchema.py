@@ -4,7 +4,6 @@ from datetime import datetime
 
 class ManagerSchema(BaseModel):
     name: str
-    hotel_id: str
     first_name: str
     last_name: str
     phone_num: str
@@ -16,7 +15,6 @@ class ManagerSchema(BaseModel):
 
 class ManagerUpdateSchema(BaseModel):
     name: Optional[str]
-    hotel_id: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
     phone_num: Optional[str]
