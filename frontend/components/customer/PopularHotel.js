@@ -24,7 +24,7 @@ export default function PopularHotel({
     navigation,
 }) {
     const handlePress = () => {
-        navigation.navigate("RoomDetail", { id: id });
+        navigation.navigate("HotelDetail", { id: id });
     };
 
     return (
@@ -32,6 +32,7 @@ export default function PopularHotel({
             <StyledView
                 style={{
                     width: 200,
+                    height: 300,
                     borderRadius: 10,
                     paddingBottom: 10,
                     marginRight: 16,
@@ -55,7 +56,7 @@ export default function PopularHotel({
                         }}
                     />
                 </StyledView>
-                <StyledView style={{ flexWrap: "wrap", alignItems: "center", gap: 6 }}>
+                <StyledView style={{ flexWrap: "wrap", alignItems: "center", gap: 6, justifyContent: 'space-between', height: 140}}>
                     <StyledView>
                         <StyledText style={{ textAlign: "center", fontWeight: "bold" }}>
                             {name}

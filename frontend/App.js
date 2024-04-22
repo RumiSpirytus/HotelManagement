@@ -5,6 +5,7 @@ const Stack = createNativeStackNavigator();
 
 import Home from "./screens/customer/Home";
 import RoomDetail from "./screens/customer/RoomDetail";
+import HotelDetail from "./screens/customer/HotelDetail";
 
 import { NativeBaseProvider } from "native-base";
 
@@ -30,6 +31,11 @@ export default function App() {
                         name="RoomDetail"
                         component={RoomDetail}
                         options={{  title: 'Xem phòng'}}
+                    />
+                    <Stack.Screen
+                        name="HotelDetail"
+                        component={HotelDetail}
+                        options={{ title: 'Xem khách sạn'}}
                     />
                 </Stack.Navigator>
                 {/* <MyTabs /> */}

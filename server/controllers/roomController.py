@@ -14,6 +14,11 @@ class RoomController:
         skip = (page - 1) * size
         return db.query(Room).offset(skip).limit(size).all()
     
+    def getAllRoomsByHotelId(hotel_id: uuid.UUID, page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+        skip = (page - 1) * size
+        rooms = db.query(Room).filter(Room.hotel_id == hotel_id).offset(skip).limit(size).all()
+        return rooms
+    
     def getAvailableRooms(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
         skip = (page - 1) * size
         rooms = db.query(Hotel.address, Room.name, Room.price, Room.logo, Room.id).join(Hotel, Hotel.id == Room.hotel_id).filter(Room.is_hired == False).offset(skip).limit(size).all()
