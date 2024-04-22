@@ -1,44 +1,89 @@
-from schemas.user import User
-from database.supabase import create_supabase_client
-import bcrypt
-from fastapi import HTTPException, Response
+from fastapi import Depends, HTTPException
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
+from database import get_db
+from schemas.userSchema import UserSchema, UserLoginSchema
+import uuid
+from models.user import User
+from models.customer import Customer
+from models.employee import Employee
+from models.manager import Manager
+from utils import (
+    get_hashed_password,
+    create_access_token,
+    create_refresh_token,
+    verify_password
+)
 
-supabase = create_supabase_client()
+class UserController:
+    def create_user(user: UserSchema, db: Session = Depends(get_db)):
+        db_user = User(
+            id=uuid.uuid4(),
+            email=user.email,
+            password=get_hashed_password(user.password),
+            role=user.role,
+            created_at=user.created_at,
+            updated_at=user.updated_at,
+        )
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
 
-def register(user: User):
-    try:
-        user_email = user.email.lower()
+        if user.role == "customer":
+            db_customer = Customer(
+                id=uuid.uuid4(),
+                user_id=db_user.id,
+                created_at=user.created_at,
+                updated_at=user.updated_at
+            )
+            db.add(db_customer)
+            db.commit()
+            db.refresh(db_customer)
 
-        #check if email exists
-        user_exists = supabase.table('user').select("*").eq('email', user_email).execute()
+        elif user.role == "employee":
+            db_employee = Employee(
+                id=uuid.uuid4(),
+                user_id=db_user.id,
+                created_at=user.created_at,
+                updated_at=user.updated_at
+            )
+            db.add(db_employee)
+            db.commit()
+            db.refresh(db_employee)
 
-        if user_exists.data:
-            return JSONResponse(status_code=400, content={"message": "Email đã tồn tại"})
+        elif user.role == "manager":
+            db_manager = Manager(
+                id=uuid.uuid4(),
+                user_id=db_user.id,
+                created_at=user.created_at,
+                updated_at=user.updated_at
+            )
+            db.add(db_manager)
+            db.commit()
+            db.refresh(db_manager)
 
-        hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        return JSONResponse(status_code=201, content={"message":"User created successfully", "user_id": str(db_user.id)})
+    
+    def get_user_by_email(email: str, db: Session = Depends(get_db)):
+        return db.query(User).filter(User.email == email).first()
+    
+    def get_user_by_id(id: uuid.UUID, db: Session = Depends(get_db)):
+        return db.query(User).filter(User.id == id).first()
+    
+    def login(user: UserLoginSchema, db: Session = Depends(get_db)):
+        db_user = db.query(User).filter(User.email == user.email).first()
+        if db_user is None:
+            raise HTTPException(status_code=400, detail="Incorrect email")
 
-        user_data = {
-            "email": user_email,
-            "password": hashed_password,
-            "username": user.user_name,
-            "role": user.role.value,
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "phone_num": user.phone_num
+        hashed_password = db_user.password
+        if not verify_password(user.password, hashed_password):
+            raise HTTPException(status_code=400, detail="Incorrect password")
+        
+        return {
+            "access_token": create_access_token(db_user.email),
+            "refresh_token": create_refresh_token(db_user.email)
         }
+    
 
-        user = supabase.table('user').insert(user_data).execute()
+
         
-        if user:
-            
-            return {
-                "message": "Đăng ký thành công",
-                "data": user
-            }
-        else:
-            raise HTTPException(status_code=400, detail="Có lỗi xảy ra trong quá trình đăng ký")
-        
-    except Exception as e:
-        print("Error creating user: ", e)
-        return JSONResponse(status_code=500, content={"message": "Có lỗi xảy ra trong quá trình đăng ký"})
