@@ -11,8 +11,8 @@ async def get_all_hotels(page: int = 1, size: int = 10, db: Session = Depends(ge
     return HotelController.getAllHotels(page, size, db)
 
 @router.get("/popular")
-async def get_popular_hotel(db: Session = Depends(get_db)):
-    return HotelController.getPopularHotel(db)
+async def get_popular_hotel(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+    return HotelController.getPopularHotel(page, size, db)
 
 @router.get("/{id}")
 async def get_hotel_by_id(id: str, db: Session = Depends(get_db)):

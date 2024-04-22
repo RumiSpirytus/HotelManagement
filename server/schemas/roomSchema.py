@@ -3,14 +3,17 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 class RoomSchema(BaseModel):
+    hotel_id: str
     name: str
     logo: str
     images: List[str]
     room_detail: str
-    service: List[dict]
+    room_convenient: List[str]
+    room_supplies: List[str]
+    room_size: float
     rating: float
     price: str
-    hotel_id: str
+    is_hired: bool = False
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
@@ -18,14 +21,17 @@ class RoomSchema(BaseModel):
         orm_mode = True
 
 class RoomUpdateSchema(BaseModel):
+    hotel_id: Optional[str]
     name: Optional[str]
     logo: Optional[str]
     images: Optional[List[str]]
     room_detail: Optional[str]
-    service: Optional[List[dict]]
+    room_convenient: Optional[List[str]]
+    room_supplies: Optional[List[str]]
+    room_size: Optional[float]
     rating: Optional[float]
     price: Optional[str]
-    hotel_id: Optional[str]
+    is_hired: Optional[bool]
     created_at: Optional[datetime]
     updated_at: datetime = datetime.now()
 

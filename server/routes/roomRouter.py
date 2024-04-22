@@ -14,6 +14,13 @@ async def get_all_rooms(page: int = 1, size: int = 10, db: Session = Depends(get
         raise HTTPException(status_code=404, detail="Rooms not found")
     return rooms
 
+@router.get("/available")
+async def get_available_rooms(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+    rooms = RoomController.getAvailableRooms(page, size, db)
+    if rooms is None:
+        raise HTTPException(status_code=404, detail="Rooms not found")
+    return rooms
+
 @router.get("/{id}")
 async def get_room_by_id(id: uuid.UUID, db: Session = Depends(get_db)):
     room = RoomController.getRoomById(id, db)

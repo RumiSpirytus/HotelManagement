@@ -4,7 +4,7 @@ from database import get_db
 from models.hotel import Hotel
 from schemas.hotelSchema import HotelSchema, HotelUpdateSchema
 from fastapi.responses import JSONResponse
-from models.user import User
+from models.manager import Manager
 import uuid
 def is_valid_uuid(uuid_to_test, version=4):
     try:
@@ -14,8 +14,6 @@ def is_valid_uuid(uuid_to_test, version=4):
     return str(uuid_obj) == uuid_to_test
 
 class HotelController:
-    
-    
     def getAllHotels(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
         skip = (page - 1) * size
         return db.query(Hotel).offset(skip).limit(size).all()
@@ -23,14 +21,16 @@ class HotelController:
     def getHotelById(id: uuid.UUID, db: Session = Depends(get_db)):
         return db.query(Hotel).filter(Hotel.id == id).first()
     
-    def getPopularHotel(db: Session = Depends(get_db)):
-        return db.query(Hotel).filter(Hotel.rating >= 4).all()
+    def getPopularHotel(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+        skip = (page - 1) * size
+        hotels = db.query(Hotel.id, Hotel.name, Hotel.logo, Hotel.rating, Hotel.address).order_by(Hotel.rating.desc()).offset(skip).limit(size).all()
+        return [{"id": hotel[0], "name": hotel[1], "logo": hotel[2], "rating": hotel[3], "address": hotel[4]} for hotel in hotels]
     
     def createHotel(hotel: HotelSchema, db: Session = Depends(get_db)):
         #check manager_id
         if not is_valid_uuid(hotel.manager_id):
             raise HTTPException(status_code=400, detail="Invalid manager_id")
-        manager = db.query(User).filter(User.id == hotel.manager_id).first()
+        manager = db.query(Manager).filter(Manager.id == hotel.manager_id).first()
         if manager is None:
             raise HTTPException(status_code=404, detail="Manager not existed")
         

@@ -14,45 +14,54 @@ import {
     ScrollView,
 } from "native-base";
 
-import { Image } from "react-native";
-
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { useState, useEffect } from "react";
 
+import AvailableRoom from "../../components/customer/AvailableRoom";
 import PopularHotel from "../../components/customer/PopularHotel";
-
-import axios from "axios";
-
-const popular_hotels = [
-    {
-        id: 1,
-        image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
-        name: "Granda Legend",
-        address: "Cầu Giấy",
-        price: 495000,
-    },
-    {
-        id: 2,
-        image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
-        name: "Granda Legend",
-        address: "Cầu Giấy",
-        price: 495000,
-    },
-    {
-        id: 3,
-        image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/378828506.jpg?k=ea7d10effc56e6e3ded34794423b9a97f43d25c303867e6051d422a08b023480&o=&hp=1",
-        name: "Granda Legend",
-        address: "Cầu Giấy",
-        price: 495000,
-    },
-];
 
 export default function Home({ navigation }) {
     const [receiveDate, setReceiveDate] = useState(new Date());
     const [checkoutDate, setCheckoutDate] = useState(new Date());
     const [checkinShow, setCheckinShow] = useState(false);
     const [checkoutShow, setCheckoutShow] = useState(false);
+    const [availableRooms, setAvailableRooms] = useState([]);
+    useEffect(() => {
+        const fetchAvailableRooms = async () => {
+            try {
+                const response = await fetch(
+                    "http://10.0.2.2:8000/api/room/available"
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setAvailableRooms(data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchAvailableRooms();
+    }, []);
+
+    const [popularHotel, setPopularHotel] = useState([]);
+    useEffect(() => {
+        const fetchPopularHotel = async () => {
+            try {
+                const response = await fetch(
+                    "http://10.0.2.2:8000/api/hotel/popular"
+                );
+                if (response.ok) {
+                    const data = await response.json();
+                    setPopularHotel(data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchPopularHotel();
+    }, []);
 
     const onReceiveChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -239,23 +248,48 @@ export default function Home({ navigation }) {
                     </ScrollView>
                 </StyledView> */}
 
-                {/* khách sạn phổ biến */}
+                {/* Phòng còn trống */}
                 <StyledView className="flex flex-col gap-4 p-4">
                     <StyledView>
                         <StyledText className=" text-lg font-semibold">
-                            Khách sạn phổ biến
+                            Phòng còn trống
                         </StyledText>
                     </StyledView>
 
                     <ScrollView horizontal>
                         <StyledView className="flex flex-row">
-                            {popular_hotels.map((hotel) => (
+                            {availableRooms.map((room) => (
+                                <AvailableRoom
+                                    key={room.id}
+                                    image={room.logo}
+                                    name={room.name}
+                                    address={room.address}
+                                    price={room.price}
+                                    navigation={navigation}
+                                    id={room.id}
+                                />
+                            ))}
+                        </StyledView>
+                    </ScrollView>
+                </StyledView>
+
+                {/* Khách sạn chất lượng  */}
+                <StyledView className="flex flex-col gap-4 p-4">
+                    <StyledView>
+                        <StyledText className=" text-lg font-semibold">
+                            Khách sạn chất lượng
+                        </StyledText>
+                    </StyledView>
+
+                    <ScrollView horizontal>
+                        <StyledView className="flex flex-row">
+                            {popularHotel.map((hotel) => (
                                 <PopularHotel
                                     key={hotel.id}
-                                    image={hotel.image}
+                                    logo={hotel.logo}
                                     name={hotel.name}
                                     address={hotel.address}
-                                    price={hotel.price}
+                                    rating={hotel.rating}
                                     navigation={navigation}
                                     id={hotel.id}
                                 />

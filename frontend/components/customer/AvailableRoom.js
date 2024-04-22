@@ -9,18 +9,14 @@ const StyledText = styled(Text);
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import {
-    AntDesign
-} from "@expo/vector-icons";
-
 import { TouchableOpacity } from "react-native";
 
-export default function PopularHotel({
+export default function AvailableRoom({
     id,
-    logo,
+    image,
     name,
     address,
-    rating,
+    price,
     navigation,
 }) {
     const handlePress = () => {
@@ -44,7 +40,7 @@ export default function PopularHotel({
                 <StyledView className="mb-2">
                     <Image
                         source={{
-                            uri: `${logo}`,
+                            uri: `${image}`,
                         }}
                         width={200}
                         height={140}
@@ -57,7 +53,7 @@ export default function PopularHotel({
                 </StyledView>
                 <StyledView style={{ flexWrap: "wrap", alignItems: "center", gap: 6 }}>
                     <StyledView>
-                        <StyledText style={{ textAlign: "center", fontWeight: "bold" }}>
+                        <StyledText style={{ textAlign: "center", fontWeight: "bold"}}>
                             {name}
                         </StyledText>
                     </StyledView>
@@ -66,17 +62,11 @@ export default function PopularHotel({
                             {address}
                         </StyledText>
                     </StyledView>
-                    <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 4,
-                                alignItems: "center",
-                            }}
-                        >
-                            <Text style={{fontWeight: "500"}}>{rating}</Text>
-                            <AntDesign name="star" size={16} color="#fe8813" />
-                        </View>
+                    <StyledView>
+                        <StyledText style={{fontWeight: "500"}}>
+                            {price}
+                        </StyledText>
+                    </StyledView>
                 </StyledView>
             </StyledView>
         </TouchableOpacity>

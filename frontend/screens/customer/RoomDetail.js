@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     View,
     Text,
@@ -26,36 +26,33 @@ import {
 } from "@expo/vector-icons";
 
 const RoomDetail = ({ navigation, route }) => {
-    const hotelId = route.params.id;
+    const room_id = route.params.id;
+    const [room, setRoom] = useState({});
+    useEffect(() => {
+        const fetchRoomDetail = async () => {
+            try {
+                const res = await fetch(
+                    `http://10.0.2.2:8000/api/room/${room_id}`
+                );
+                const data = await res.json();
+                setRoom(data);
+                console.log(data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchRoomDetail();
+    }, []);
 
     const [showModal, setShowModal] = useState(false);
 
-    const { imageUrl, title, location, rating, price, host, amenities } = {
-        imageUrl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiciambWqCFfWeg1Uz0Dfir_7_K0_Nz6BeGrbPvt9UTQ&s",
-        title: "Bali Motel Vung Tau",
-        location: "Vung Tau, Vietnam",
-        rating: "4.5",
-        price: "400.000 VNĐ",
-        host: {
-            image: "https://via.placeholder.com/50",
-            name: "John Doe",
-            rating: "4.5",
-        },
-        amenities: [
-            { icon: "🚗", label: "Parking" },
-            { icon: "🍳", label: "Breakfast" },
-            { icon: "🏊", label: "Pool" },
-        ],
-    };
-
     return (
         <ScrollView style={styles.card}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
+            <Image source={{ uri: room.logo }} style={styles.image} />
             <View style={styles.infoContainer}>
                 <View style={{ display: "flex", gap: 10 }}>
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={styles.location}>{location}</Text>
+                    <Text style={styles.title}>{room.name}</Text>
+                    <Text style={styles.location}>{room.address}</Text>
                     <View style={styles.ratingContainer}>
                         <View
                             style={{
@@ -65,10 +62,10 @@ const RoomDetail = ({ navigation, route }) => {
                                 alignItems: "center",
                             }}
                         >
-                            <Text style={styles.rating}>{rating}</Text>
+                            <Text style={styles.rating}>{room.rating}</Text>
                             <AntDesign name="star" size={16} color="#fe8813" />
                         </View>
-                        <Text style={styles.price}>{price}/ngày</Text>
+                        <Text style={styles.price}>{room.price}</Text>
                     </View>
                 </View>
 
@@ -82,94 +79,87 @@ const RoomDetail = ({ navigation, route }) => {
                     }}
                 />
 
-                <Text style={styles.description}>
-                    Set in Vung Tau, 100 metres from Front Beach, Bali Motel
-                    Vung Tau offers accommodation with a garden, private parking
-                    and a shared...
-                </Text>
+                <Text style={styles.description}>{room.room_detail}</Text>
 
-                <View style={{ display: "flex", gap: 12 }}>
+                {/* Tiện ích  */}
+                <View style={{ display: "flex", gap: 8 }}>
                     <Text
                         style={{
                             fontWeight: "bold",
                             fontSize: 25,
                         }}
                     >
-                        Dịch vụ cung cấp
+                        Tiện ích
                     </Text>
                     <View
                         style={{
                             display: "flex",
-                            flexDirection: "row",
-                            gap: 10,
-                            justifyContent: "space-between",
+                            gap: 12,
                         }}
                     >
-                        <View
-                            style={{
-                                padding: 10,
-                                borderColor: "#000",
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 4,
-                                height: 100,
-                                width: 100,
-                            }}
-                        >
-                            <MaterialCommunityIcons
-                                name="bed"
-                                size={30}
-                                color="black"
-                            />
-                            <Text>2 Giường</Text>
-                        </View>
+                        {room.room_convenient &&
+                            room.room_convenient.map((convenient, index) => {
+                                return (
+                                    <View
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: 6,
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <AntDesign
+                                            name="checkcircleo"
+                                            size={20}
+                                            color="green"
+                                        />
+                                        <Text style={{ fontSize: 16 }}>
+                                            {convenient}
+                                        </Text>
+                                    </View>
+                                );
+                            })}
+                    </View>
+                </View>
 
-                        <View
-                            style={{
-                                padding: 10,
-                                borderColor: "#000",
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 4,
-                                height: 100,
-                                width: 100,
-                            }}
-                        >
-                            <MaterialIcons
-                                name="dinner-dining"
-                                size={30}
-                                color="black"
-                            />
-                            <Text>3 bữa/ngày</Text>
-                        </View>
-
-                        <View
-                            style={{
-                                padding: 10,
-                                borderColor: "#000",
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 4,
-                                height: 100,
-                                width: 100,
-                            }}
-                        >
-                            <MaterialIcons
-                                name="local-parking"
-                                size={30}
-                                color="black"
-                            />
-                            <Text>Bãi đỗ xe</Text>
-                        </View>
+                {/* Đồ dùng  */}
+                <View style={{ display: "flex", gap: 8 }}>
+                    <Text
+                        style={{
+                            fontWeight: "bold",
+                            fontSize: 25,
+                        }}
+                    >
+                        Đồ dùng
+                    </Text>
+                    <View
+                        style={{
+                            display: "flex",
+                            gap: 12,
+                        }}
+                    >
+                        {room.room_supplies &&
+                            room.room_supplies.map((supplies, index) => {
+                                return (
+                                    <View
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: 6,
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <AntDesign
+                                            name="checkcircleo"
+                                            size={20}
+                                            color="green"
+                                        />
+                                        <Text style={{ fontSize: 16 }}>
+                                            {supplies}
+                                        </Text>
+                                    </View>
+                                );
+                            })}
                     </View>
                 </View>
 
@@ -191,30 +181,24 @@ const RoomDetail = ({ navigation, route }) => {
                                 justifyContent: "space-between",
                             }}
                         >
-                            <Image
-                                source={{
-                                    uri: "https://assets-global.website-files.com/5c6d6c45eaa55f57c6367749/65045f093c166fdddb4a94a5_x-65045f0266217.webp",
-                                }}
-                                style={{
-                                    width: 170,
-                                    height: 170,
-                                    borderRadius: 5,
-                                    borderWidth: 1,
-                                    borderColor: "#000",
-                                }}
-                            />
-                            <Image
-                                source={{
-                                    uri: "https://www.usatoday.com/gcdn/-mm-/05b227ad5b8ad4e9dcb53af4f31d7fbdb7fa901b/c=0-64-2119-1259/local/-/media/USATODAY/USATODAY/2014/08/13/1407953244000-177513283.jpg",
-                                }}
-                                style={{
-                                    width: 170,
-                                    height: 170,
-                                    borderRadius: 5,
-                                    borderWidth: 1,
-                                    borderColor: "#000",
-                                }}
-                            />
+                            {room.images &&
+                                room.images.map((image, index) => {
+                                    return index < room.images.length / 2 ? (
+                                        <Image
+                                            key={index}
+                                            source={{
+                                                uri: `${image}`,
+                                            }}
+                                            style={{
+                                                width: 170,
+                                                height: 170,
+                                                borderRadius: 5,
+                                                borderWidth: 1,
+                                                borderColor: "#000",
+                                            }}
+                                        />
+                                    ) : null;
+                                })}
                         </View>
 
                         <View
@@ -225,36 +209,35 @@ const RoomDetail = ({ navigation, route }) => {
                                 justifyContent: "space-between",
                             }}
                         >
-                            <Image
-                                source={{
-                                    uri: "https://assets-global.website-files.com/5c6d6c45eaa55f57c6367749/65045f093c166fdddb4a94a5_x-65045f0266217.webp",
-                                }}
-                                style={{
-                                    width: 170,
-                                    height: 170,
-                                    borderRadius: 5,
-                                    borderWidth: 1,
-                                    borderColor: "#000",
-                                }}
-                            />
-                            <Image
-                                source={{
-                                    uri: "https://www.usatoday.com/gcdn/-mm-/05b227ad5b8ad4e9dcb53af4f31d7fbdb7fa901b/c=0-64-2119-1259/local/-/media/USATODAY/USATODAY/2014/08/13/1407953244000-177513283.jpg",
-                                }}
-                                style={{
-                                    width: 170,
-                                    height: 170,
-                                    borderRadius: 5,
-                                    borderWidth: 1,
-                                    borderColor: "#000",
-                                }}
-                            />
+                            {room.images &&
+                                room.images.map((image, index) => {
+                                    return index >= room.images.length / 2 ? (
+                                        <Image
+                                            key={index}
+                                            source={{
+                                                uri: `${image}`,
+                                            }}
+                                            style={{
+                                                width: 170,
+                                                height: 170,
+                                                borderRadius: 5,
+                                                borderWidth: 1,
+                                                borderColor: "#000",
+                                            }}
+                                        />
+                                    ) : null;
+                                })}
                         </View>
                     </View>
                 </View>
 
-                <Center style={{marginTop: 10}}>
-                    <Button onPress={() => setShowModal(true)} style={{width: 250}}>Đặt phòng ngay</Button>
+                <Center style={{ marginTop: 10 }}>
+                    <Button
+                        onPress={() => setShowModal(true)}
+                        style={{ width: 250 }}
+                    >
+                        Đặt phòng ngay
+                    </Button>
                     <Modal
                         isOpen={showModal}
                         onClose={() => setShowModal(false)}
@@ -264,7 +247,9 @@ const RoomDetail = ({ navigation, route }) => {
                             <Modal.Header>Đặt phòng</Modal.Header>
                             <Modal.Body>
                                 <FormControl>
-                                    <FormControl.Label>Họ tên</FormControl.Label>
+                                    <FormControl.Label>
+                                        Họ tên
+                                    </FormControl.Label>
                                     <Input />
                                 </FormControl>
                                 <FormControl mt="3">
@@ -272,15 +257,21 @@ const RoomDetail = ({ navigation, route }) => {
                                     <Input />
                                 </FormControl>
                                 <FormControl mt="3">
-                                    <FormControl.Label>Số điện thoại</FormControl.Label>
+                                    <FormControl.Label>
+                                        Số điện thoại
+                                    </FormControl.Label>
                                     <Input />
                                 </FormControl>
                                 <FormControl mt="3">
-                                    <FormControl.Label>Số người</FormControl.Label>
+                                    <FormControl.Label>
+                                        Số người
+                                    </FormControl.Label>
                                     <Input />
                                 </FormControl>
                                 <FormControl mt="3">
-                                    <FormControl.Label>Số ngày</FormControl.Label>
+                                    <FormControl.Label>
+                                        Số ngày
+                                    </FormControl.Label>
                                     <Input />
                                 </FormControl>
                             </Modal.Body>
@@ -323,7 +314,7 @@ const styles = StyleSheet.create({
     infoContainer: {
         padding: 20,
         display: "flex",
-        gap: 10,
+        gap: 30,
     },
     title: {
         fontSize: 25,
