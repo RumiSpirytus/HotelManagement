@@ -22,11 +22,14 @@ import AvailableRoom from "../../components/customer/AvailableRoom";
 import PopularHotel from "../../components/customer/PopularHotel";
 
 export default function Home({ navigation }) {
-    const [receiveDate, setReceiveDate] = useState(new Date());
-    const [checkoutDate, setCheckoutDate] = useState(new Date());
-    const [checkinShow, setCheckinShow] = useState(false);
-    const [checkoutShow, setCheckoutShow] = useState(false);
     const [availableRooms, setAvailableRooms] = useState([]);
+    const [searchRooms, setSearchRooms] = useState(null);
+    const [popularHotel, setPopularHotel] = useState([]);
+    const [handleSearch, setHandleSearch] = useState(false);
+    const [formRoomName, setFormRoomName] = useState("");
+    const [formHotelAddress, setFormHotelAddress] = useState("");
+    const [formHotelName, setFormHotelName] = useState("");
+    const [formPrice, setFormPrice] = useState(0);
     useEffect(() => {
         const fetchAvailableRooms = async () => {
             try {
@@ -42,11 +45,6 @@ export default function Home({ navigation }) {
                 console.error(error);
             }
         };
-        fetchAvailableRooms();
-    }, []);
-
-    const [popularHotel, setPopularHotel] = useState([]);
-    useEffect(() => {
         const fetchPopularHotel = async () => {
             try {
                 const response = await fetch(
@@ -60,20 +58,31 @@ export default function Home({ navigation }) {
                 console.error(error);
             }
         };
+
         fetchPopularHotel();
+        fetchAvailableRooms();
     }, []);
 
-    const onReceiveChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setCheckinShow(!checkinShow);
-        setReceiveDate(currentDate);
-    };
-
-    const onCheckoutChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setCheckoutShow(!checkoutShow);
-        setCheckoutDate(currentDate);
-    };
+    useEffect(() => {
+        const fetchSearchRooms = async () => {
+            try {
+                const response = await fetch(
+                    `http://10.0.2.2:8000/api/search/room?room_name=${formRoomName}&hotel_address=${formHotelAddress}&hotel_name=${formHotelName}&price=${formPrice}`
+                );
+                if (response.ok) {
+                    const data = await response.json();
+                    setSearchRooms(data);
+                    console.log(data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+            setHandleSearch(false);
+        };
+        if (handleSearch) {
+            fetchSearchRooms();
+        }
+    }, [handleSearch]);
 
     return (
         <ScrollView>
@@ -86,167 +95,101 @@ export default function Home({ navigation }) {
                                 <FormControl className="flex flex-col gap-2">
                                     <Stack>
                                         <FormControl.Label>
-                                            Địa điểm, tên khách sạn
+                                            Địa điểm
                                         </FormControl.Label>
                                         <Input
                                             type="text"
-                                            placeholder="Nhập địa điểm, tên khách sạn"
-                                        />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
+                                            placeholder="Nhập địa điểm"
+                                            value={formHotelAddress}
+                                            onChangeText={(text) =>
+                                                setFormHotelAddress(text)
                                             }
-                                        >
-                                            Vui lòng nhập tên địa điểm, khách
-                                            sạn
-                                        </FormControl.ErrorMessage>
+                                        />
                                     </Stack>
 
-                                    <Stack mx="">
+                                    <Stack>
                                         <FormControl.Label>
-                                            Ngày nhận phòng
+                                            Tên khách sạn
                                         </FormControl.Label>
                                         <Input
-                                            type="date"
-                                            placeholder="Nhập ngày nhận phòng"
-                                            value={receiveDate
-                                                .toISOString()
-                                                .substring(0, 10)}
-                                            onTouchStart={() =>
-                                                setCheckinShow(true)
+                                            type="text"
+                                            placeholder="Nhập tên khách sạn"
+                                            value={formHotelName}
+                                            onChangeText={(text) =>
+                                                setFormHotelName(text)
                                             }
                                         />
-                                        {checkinShow && (
-                                            <DateTimePicker
-                                                testID="dateTimePicker"
-                                                value={receiveDate}
-                                                mode="date"
-                                                display="default"
-                                                onChange={onReceiveChange}
-                                            />
-                                        )}
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        ></FormControl.ErrorMessage>
                                     </Stack>
 
-                                    {/* <Stack mx="">
+                                    <Stack>
                                         <FormControl.Label>
-                                            Ngày nhận phòng
+                                            Tên phòng
                                         </FormControl.Label>
                                         <Input
-                                            type="date"
-                                            placeholder="Nhập ngày nhận phòng"
-                                            value={date
-                                                .toISOString()
-                                                .substring(0, 10)}
-                                            onTouchStart={() => setShow(true)}
-                                        />
-                                        {show && (
-                                            <DateTimePicker
-                                                testID="dateTimePicker"
-                                                value={date}
-                                                mode="date"
-                                                display="default"
-                                                onChange={onChange}
-                                            />
-                                        )}
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        ></FormControl.ErrorMessage>
-                                    </Stack> */}
-
-                                    <Stack mx="">
-                                        <FormControl.Label>
-                                            Ngày trả phòng
-                                        </FormControl.Label>
-                                        <Input
-                                            type="date"
-                                            placeholder="Nhập ngày trả phòng"
-                                            value={checkoutDate
-                                                .toISOString()
-                                                .substring(0, 10)}
-                                            onTouchStart={() =>
-                                                setCheckoutShow(true)
+                                            type="text"
+                                            placeholder="Nhập tên phòng"
+                                            value={formRoomName}
+                                            onChangeText={(text) =>
+                                                setFormRoomName(text)
                                             }
                                         />
-                                        {checkoutShow && (
-                                            <DateTimePicker
-                                                testID="dateTimePicker"
-                                                value={checkoutDate}
-                                                mode="date"
-                                                display="default"
-                                                onChange={onCheckoutChange}
-                                            />
-                                        )}
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        ></FormControl.ErrorMessage>
                                     </Stack>
 
-                                    <Stack mx="">
+                                    <Stack>
                                         <FormControl.Label>
-                                            Số phòng trống
+                                            Giá
                                         </FormControl.Label>
                                         <Input
-                                            type="date"
-                                            placeholder="Nhập số lượng"
-                                        />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
+                                            type="text"
+                                            placeholder="Nhập giá tối đa"
+                                            value={formPrice}
+                                            onChangeText={(text) =>
+                                                setFormPrice(text)
                                             }
-                                        ></FormControl.ErrorMessage>
+                                        />
                                     </Stack>
                                 </FormControl>
                             </Box>
                         </Box>
 
-                        <Button onPress={() => console.log("hello world")}>
+                        <Button onPress={() => setHandleSearch(true)}>
                             Tìm kiếm
                         </Button>
                     </StyledView>
                 </StyledView>
 
-                {/* Tìm kiếm gần đây  */}
-                {/* <StyledView className="flex flex-col gap-y-1 p-4">
-                    <StyledView>
-                        <StyledText className=" text-lg font-semibold">
-                            Tìm kiếm gần đây
-                        </StyledText>
-                    </StyledView>
-
-                    <ScrollView horizontal>
-                        <StyledView className="flex flex-row gap-4">
-                            <StyledView className="bg-white p-4 rounded-lg shadow-lg">
-                                <StyledText className="font-semibold">
-                                    Hà Nội
-                                </StyledText>
-                            </StyledView>
-                            <StyledView className="bg-white p-4 rounded-lg shadow-lg">
-                                <StyledText className="font-semibold">
-                                    Granda Legend
-                                </StyledText>
-                            </StyledView>
-                            <StyledView className="bg-white p-4 rounded-lg shadow-lg">
-                                <StyledText className="font-semibold">
-                                    Hồ Chí Minh
-                                </StyledText>
-                            </StyledView>
-                            <StyledView className="bg-white p-4 rounded-lg shadow-lg">
-                                <StyledText className="font-semibold">
-                                    Hải Phòng
-                                </StyledText>
-                            </StyledView>
+                {/* kết quả tìm kiếm  */}
+                {searchRooms ? (
+                    <StyledView className="flex flex-col gap-4 p-4">
+                        <StyledView>
+                            <StyledText className=" text-lg font-semibold">
+                                Kết quả tìm kiếm
+                            </StyledText>
                         </StyledView>
-                    </ScrollView>
-                </StyledView> */}
+
+                        <ScrollView horizontal>
+                            <StyledView className="flex flex-row">
+                                {searchRooms.length > 0 ? (
+                                    searchRooms.map((room) => (
+                                        <AvailableRoom
+                                            key={room.id}
+                                            image={room.logo}
+                                            name={room.name}
+                                            address={room.address}
+                                            price={room.price}
+                                            navigation={navigation}
+                                            id={room.id}
+                                        />
+                                    ))
+                                ) : (
+                                    <StyledText>
+                                        Không tìm thấy kết quả
+                                    </StyledText>
+                                )}
+                            </StyledView>
+                        </ScrollView>
+                    </StyledView>
+                ) : null}
 
                 {/* Phòng còn trống */}
                 <StyledView className="flex flex-col gap-4 p-4">

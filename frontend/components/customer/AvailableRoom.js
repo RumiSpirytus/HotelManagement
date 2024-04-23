@@ -78,7 +78,7 @@ export default function AvailableRoom({
                     </StyledView>
                     <StyledView>
                         <StyledText style={{ fontWeight: "500" }}>
-                            {price}
+                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)}
                         </StyledText>
                     </StyledView>
                 </StyledView>

@@ -65,7 +65,7 @@ const RoomDetail = ({ navigation, route }) => {
                             <Text style={styles.rating}>{room.rating}</Text>
                             <AntDesign name="star" size={16} color="#fe8813" />
                         </View>
-                        <Text style={styles.price}>{room.price}</Text>
+                        <Text style={styles.price}>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.price)}</Text>
                     </View>
                 </View>
 

@@ -12,7 +12,7 @@ class RoomSchema(BaseModel):
     room_supplies: List[str]
     room_size: float
     rating: float
-    price: str
+    price: float
     is_hired: bool = False
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
@@ -30,7 +30,7 @@ class RoomUpdateSchema(BaseModel):
     room_supplies: Optional[List[str]]
     room_size: Optional[float]
     rating: Optional[float]
-    price: Optional[str]
+    price: Optional[float]
     is_hired: Optional[bool]
     created_at: Optional[datetime]
     updated_at: datetime = datetime.now()

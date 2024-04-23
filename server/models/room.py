@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, String, TIMESTAMP, text, Uuid, ARRAY, JSON, Float, ForeignKey, Boolean, inspect
+from sqlalchemy import Column, String, TIMESTAMP, text, Uuid, ARRAY, Float, ForeignKey, Boolean, inspect, Double
 from sqlalchemy.dialects.postgresql import UUID as Uuid
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -21,7 +21,7 @@ class Room(Base):
     room_supplies = Column(ARRAY(String), nullable=True)
     room_size = Column(Float, nullable=True)
     rating = Column(Float, nullable=True)
-    price = Column(String, nullable=False)
+    price = Column(Double, nullable=False)
     is_hired = Column(Boolean, nullable=False, default=False)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
