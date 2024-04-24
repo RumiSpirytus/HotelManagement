@@ -6,6 +6,9 @@ const Stack = createNativeStackNavigator();
 import Home from "./screens/customer/Home";
 import RoomDetail from "./screens/customer/RoomDetail";
 import HotelDetail from "./screens/customer/HotelDetail";
+import Login from "./screens/admin/Login";
+import Signup from "./screens/admin/Signup";
+import Booking from "./screens/customer/Booking";
 
 import { NativeBaseProvider } from "native-base";
 
@@ -21,7 +24,22 @@ export default function App() {
     return (
         <NativeBaseProvider>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="Home">
+                <Stack.Navigator initialRouteName="MyTabs">
+                    <Stack.Screen
+                        name="Login"
+                        component={Login}
+                        options={{ headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="Signup"
+                        component={Signup}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="MyTabs"
+                        component={MyTabs}
+                        options={{ headerShown: false }}
+                    />
                     <Stack.Screen
                         name="Home"
                         component={Home}
@@ -30,15 +48,14 @@ export default function App() {
                     <Stack.Screen
                         name="RoomDetail"
                         component={RoomDetail}
-                        options={{  title: 'Xem phòng'}}
+                        options={{ title: "Xem phòng" }}
                     />
                     <Stack.Screen
                         name="HotelDetail"
                         component={HotelDetail}
-                        options={{ title: 'Xem khách sạn'}}
+                        options={{ title: "Xem khách sạn" }}
                     />
                 </Stack.Navigator>
-                {/* <MyTabs /> */}
             </NavigationContainer>
         </NativeBaseProvider>
     );
@@ -47,14 +64,12 @@ export default function App() {
 function MyTabs() {
     return (
         <Tab.Navigator
-            screenOptions={{
+            screenOptions={({ route }) => ({
                 tabBarActiveTintColor: "white",
                 tabBarInactiveTintColor: "gray",
-                tabBarStyle: {
-                    backgroundColor: "#fff",
-                    height: 50,
-                },
-            }}
+                tabBarStyle: { backgroundColor: "#fff", height: 50 },
+                tabBarVisible: route.name !== "Login", // Hide tab bar on Login screen
+            })}
         >
             <Tab.Screen
                 name="Home"
@@ -64,6 +79,21 @@ function MyTabs() {
                     tabBarIcon: () => (
                         <MaterialCommunityIcons
                             name="home"
+                            color="#000"
+                            size={20}
+                        />
+                    ),
+                }}
+            />
+
+            <Tab.Screen
+                name="Booking"
+                component={Booking}
+                options={{
+                    tabBarLabel: "Đặt phòng",
+                    tabBarIcon: () => (
+                        <MaterialCommunityIcons
+                            name="calendar"
                             color="#000"
                             size={20}
                         />

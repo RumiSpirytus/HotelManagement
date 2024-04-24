@@ -18,5 +18,4 @@ class Employee(Base):
     hotel = relationship("Hotel", back_populates="employee")
     manager = relationship("Manager", back_populates="employee")
     user = relationship("User", back_populates="employee")
-    booking = relationship("Booking", back_populates="employee")
     payment = relationship("Payment", back_populates="employee")

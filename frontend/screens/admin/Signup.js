@@ -8,10 +8,10 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../constants/colors";
+import COLORS from "../../constants/colors.js";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-import Button from "../components/Button";
+import Button from "../../components/Button.js";
 
 const Signup = ({ navigation }) => {
     const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -241,7 +241,7 @@ const Signup = ({ navigation }) => {
                         }}
                     >
                         <Image
-                            source={require("../assets/facebook.png")}
+                            source={require("../../assets/facebook.png")}
                             style={{
                                 height: 36,
                                 width: 36,
@@ -268,7 +268,7 @@ const Signup = ({ navigation }) => {
                         }}
                     >
                         <Image
-                            source={require("../assets/google.png")}
+                            source={require("../../assets/google.png")}
                             style={{
                                 height: 36,
                                 width: 36,

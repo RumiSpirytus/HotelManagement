@@ -10,11 +10,8 @@ import {
     FormControl,
     Stack,
     Input,
-    WarningOutlineIcon,
     ScrollView,
 } from "native-base";
-
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { useState, useEffect } from "react";
 
@@ -72,10 +69,12 @@ export default function Home({ navigation }) {
                 if (response.ok) {
                     const data = await response.json();
                     setSearchRooms(data);
-                    console.log(data);
+                } else {
+                    setSearchRooms([]);
                 }
             } catch (error) {
                 console.error(error);
+                setSearchRooms([]);
             }
             setHandleSearch(false);
         };
@@ -159,7 +158,7 @@ export default function Home({ navigation }) {
                 </StyledView>
 
                 {/* kết quả tìm kiếm  */}
-                {searchRooms ? (
+                {searchRooms && searchRooms.length > 0 ? (
                     <StyledView className="flex flex-col gap-4 p-4">
                         <StyledView>
                             <StyledText className=" text-lg font-semibold">
