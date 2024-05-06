@@ -15,15 +15,15 @@ import {
     FormControl,
     Input,
     Center,
+    Stack,
+    WarningOutlineIcon,
+    Box,
 } from "native-base";
 import { useState } from "react";
 
-import {
-    AntDesign,
-    FontAwesome5,
-    MaterialIcons,
-    MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const RoomDetail = ({ navigation, route }) => {
     const room_id = route.params.id;
@@ -36,7 +36,6 @@ const RoomDetail = ({ navigation, route }) => {
                 );
                 const data = await res.json();
                 setRoom(data);
-                console.log(data);
             } catch (err) {
                 console.log(err);
             }
@@ -45,6 +44,148 @@ const RoomDetail = ({ navigation, route }) => {
     }, []);
 
     const [showModal, setShowModal] = useState(false);
+
+    const [date, setDate] = useState(new Date());
+    const [show, setShow] = useState(false);
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(!show);
+        setDate(currentDate);
+    };
+
+    const [formName, setFormName] = useState("");
+    const [formEmail, setFormEmail] = useState("");
+    const [formPhone, setFormPhone] = useState("");
+    const [formPeople, setFormPeople] = useState("");
+
+    const [validName, setValidName] = useState({
+        valid: true,
+        error: "",
+    });
+    const [validEmail, setValidEmail] = useState({
+        valid: true,
+        error: "",
+    });
+    const [validPhone, setValidPhone] = useState({
+        valid: true,
+        error: "",
+    });
+    const [validPeople, setValidPeople] = useState({
+        valid: true,
+        error: "",
+    });
+
+    function validForm() {
+        let valid = true;
+        if (formName === "") {
+            setValidName({
+                valid: false,
+                error: "Họ tên không được để trống",
+            });
+            valid = false;
+        } else {
+            setValidName({
+                valid: true,
+                error: "",
+            });
+        }
+
+        if (formEmail === "") {
+            setValidEmail({
+                valid: false,
+                error: "Email không được để trống",
+            });
+            valid = false;
+        } else {
+            setValidEmail({
+                valid: true,
+                error: "",
+            });
+        }
+
+        if (formPhone === "") {
+            setValidPhone({
+                valid: false,
+                error: "Số điện thoại không được để trống",
+            });
+            valid = false;
+        } else {
+            setValidPhone({
+                valid: true,
+                error: "",
+            });
+        }
+
+        if (formPeople === "") {
+            setValidPeople({
+                valid: false,
+                error: "Số người không được để trống",
+            });
+            valid = false;
+        } else {
+            setValidPeople({
+                valid: true,
+                error: "",
+            });
+        }
+
+        return valid;
+    }
+
+    async function handleSubmit() {
+        if (validForm()) {
+            formData = {
+                customer_id: "d8ba2391-8ae1-43cf-b294-e36937b5ad02",
+                room_id: room_id,
+                check_in: date,
+                guest_quantity: formPeople,
+                customer_name: formName,
+                customer_email: formEmail,
+                customer_phone: formPhone,
+            };
+            console.log(formData);
+
+            const response = await fetch("http://10.0.2.2:8000/api/booking", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                alert("Đặt phòng thành công");
+            } else {
+                alert("Đặt phòng thất bại");
+            }
+        }
+    }
+
+    function resetForm() {
+        setFormName("");
+        setFormEmail("");
+        setFormPhone("");
+        setFormPeople("");
+        setDate(new Date());
+        setShow(false);
+
+        setValidName({
+            valid: true,
+            error: "",
+        });
+        setValidEmail({
+            valid: true,
+            error: "",
+        });
+        setValidPhone({
+            valid: true,
+            error: "",
+        });
+        setValidPeople({
+            valid: true,
+            error: "",
+        });
+    }
 
     return (
         <ScrollView style={styles.card}>
@@ -65,7 +206,12 @@ const RoomDetail = ({ navigation, route }) => {
                             <Text style={styles.rating}>{room.rating}</Text>
                             <AntDesign name="star" size={16} color="#fe8813" />
                         </View>
-                        <Text style={styles.price}>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.price)}</Text>
+                        <Text style={styles.price}>
+                            {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                            }).format(room.price)}
+                        </Text>
                     </View>
                 </View>
 
@@ -107,6 +253,7 @@ const RoomDetail = ({ navigation, route }) => {
                                             gap: 6,
                                             alignItems: "center",
                                         }}
+                                        key={index}
                                     >
                                         <AntDesign
                                             name="checkcircleo"
@@ -148,6 +295,7 @@ const RoomDetail = ({ navigation, route }) => {
                                             gap: 6,
                                             alignItems: "center",
                                         }}
+                                        key={index}
                                     >
                                         <AntDesign
                                             name="checkcircleo"
@@ -246,34 +394,111 @@ const RoomDetail = ({ navigation, route }) => {
                             <Modal.CloseButton />
                             <Modal.Header>Đặt phòng</Modal.Header>
                             <Modal.Body>
-                                <FormControl>
-                                    <FormControl.Label>
-                                        Họ tên
-                                    </FormControl.Label>
-                                    <Input />
-                                </FormControl>
-                                <FormControl mt="3">
-                                    <FormControl.Label>Email</FormControl.Label>
-                                    <Input />
-                                </FormControl>
-                                <FormControl mt="3">
-                                    <FormControl.Label>
-                                        Số điện thoại
-                                    </FormControl.Label>
-                                    <Input />
-                                </FormControl>
-                                <FormControl mt="3">
-                                    <FormControl.Label>
-                                        Số người
-                                    </FormControl.Label>
-                                    <Input />
-                                </FormControl>
-                                <FormControl mt="3">
-                                    <FormControl.Label>
-                                        Số ngày
-                                    </FormControl.Label>
-                                    <Input />
-                                </FormControl>
+                                <Box>
+                                    <FormControl isInvalid={!validName.valid}>
+                                        <FormControl.Label>
+                                            Họ tên
+                                        </FormControl.Label>
+                                        <Input
+                                            value={formName}
+                                            onChangeText={(text) => {
+                                                setFormName(text);
+                                            }}
+                                        />
+                                        <FormControl.ErrorMessage
+                                            leftIcon={
+                                                <WarningOutlineIcon size="xs" />
+                                            }
+                                        >
+                                            {validName.error}
+                                        </FormControl.ErrorMessage>
+                                    </FormControl>
+                                    <FormControl
+                                        mt="3"
+                                        isInvalid={!validEmail.valid}
+                                    >
+                                        <FormControl.Label>
+                                            Email
+                                        </FormControl.Label>
+                                        <Input
+                                            value={formEmail}
+                                            onChangeText={(text) =>
+                                                setFormEmail(text)
+                                            }
+                                        />
+                                        <FormControl.ErrorMessage
+                                            leftIcon={
+                                                <WarningOutlineIcon size="xs" />
+                                            }
+                                        >
+                                            {validEmail.error}
+                                        </FormControl.ErrorMessage>
+                                    </FormControl>
+                                    <FormControl
+                                        mt="3"
+                                        isInvalid={!validPhone.valid}
+                                    >
+                                        <FormControl.Label>
+                                            Số điện thoại
+                                        </FormControl.Label>
+                                        <Input
+                                            value={formPhone}
+                                            onChangeText={(text) =>
+                                                setFormPhone(text)
+                                            }
+                                        />
+                                        <FormControl.ErrorMessage
+                                            leftIcon={
+                                                <WarningOutlineIcon size="xs" />
+                                            }
+                                        >
+                                            {validPhone.error}
+                                        </FormControl.ErrorMessage>
+                                    </FormControl>
+                                    <FormControl
+                                        mt="3"
+                                        isInvalid={!validPeople.valid}
+                                    >
+                                        <FormControl.Label>
+                                            Số người
+                                        </FormControl.Label>
+                                        <Input
+                                            value={formPeople}
+                                            onChangeText={(text) =>
+                                                setFormPeople(text)
+                                            }
+                                        />
+                                        <FormControl.ErrorMessage
+                                            leftIcon={
+                                                <WarningOutlineIcon size="xs" />
+                                            }
+                                        >
+                                            {validPeople.error}
+                                        </FormControl.ErrorMessage>
+                                    </FormControl>
+                                    <FormControl mt="3">
+                                        <FormControl.Label>
+                                            Ngày nhận phòng
+                                        </FormControl.Label>
+                                        <Input
+                                            type="date"
+                                            placeholder="Nhập ngày nhận phòng"
+                                            value={date
+                                                .toISOString()
+                                                .substring(0, 10)}
+                                            onTouchStart={() => setShow(true)}
+                                        />
+                                        {show && (
+                                            <DateTimePicker
+                                                testID="dateTimePicker"
+                                                value={date}
+                                                mode="date"
+                                                display="default"
+                                                onChange={onChange}
+                                            />
+                                        )}
+                                    </FormControl>
+                                </Box>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button.Group space={2}>
@@ -281,6 +506,7 @@ const RoomDetail = ({ navigation, route }) => {
                                         variant="ghost"
                                         colorScheme="blueGray"
                                         onPress={() => {
+                                            resetForm();
                                             setShowModal(false);
                                         }}
                                     >
@@ -288,7 +514,12 @@ const RoomDetail = ({ navigation, route }) => {
                                     </Button>
                                     <Button
                                         onPress={() => {
-                                            setShowModal(false);
+                                            if (validForm()) {
+                                                handleSubmit();
+                                                //reset form
+                                                resetForm();
+                                                setShowModal(false);
+                                            }
                                         }}
                                     >
                                         Xác nhận

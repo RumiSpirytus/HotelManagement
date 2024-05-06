@@ -9,10 +9,10 @@ import HotelDetail from "./screens/customer/HotelDetail";
 import Login from "./screens/admin/Login";
 import Signup from "./screens/admin/Signup";
 import Booking from "./screens/customer/Booking";
+import Profile from "./screens/customer/Profile";
+import UserContext from "./contexts/UserContext";
 
-import { NativeBaseProvider } from "native-base";
-
-import { View } from "native-base";
+import { NativeBaseProvider, View } from "native-base";
 
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
@@ -20,48 +20,54 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Tab = createMaterialBottomTabNavigator();
 
+import { UserProvider } from "./contexts/UserContext";
+
 export default function App() {
     return (
-        <NativeBaseProvider>
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName="MyTabs">
-                    <Stack.Screen
+        <UserProvider>
+            <NativeBaseProvider>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName="MyTabs">
+                        {/* <Stack.Screen
                         name="Login"
                         component={Login}
                         options={{ headerShown: false}}
-                    />
-                    <Stack.Screen
-                        name="Signup"
-                        component={Signup}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="MyTabs"
-                        component={MyTabs}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="Home"
-                        component={Home}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="RoomDetail"
-                        component={RoomDetail}
-                        options={{ title: "Xem phòng" }}
-                    />
-                    <Stack.Screen
-                        name="HotelDetail"
-                        component={HotelDetail}
-                        options={{ title: "Xem khách sạn" }}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
-        </NativeBaseProvider>
+                    /> */}
+                        <Stack.Screen
+                            name="Signup"
+                            component={Signup}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="MyTabs"
+                            component={MyTabs}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Home"
+                            component={Home}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="RoomDetail"
+                            component={RoomDetail}
+                            options={{ title: "Xem phòng" }}
+                        />
+                        <Stack.Screen
+                            name="HotelDetail"
+                            component={HotelDetail}
+                            options={{ title: "Xem khách sạn" }}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </NativeBaseProvider>
+        </UserProvider>
     );
 }
 
 function MyTabs() {
+    const { user } = React.useContext(UserContext);
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -86,7 +92,7 @@ function MyTabs() {
                 }}
             />
 
-            <Tab.Screen
+            {user ? <Tab.Screen
                 name="Booking"
                 component={Booking}
                 options={{
@@ -99,7 +105,38 @@ function MyTabs() {
                         />
                     ),
                 }}
-            />
+            />: null}
+            {user ? (
+                <Tab.Screen
+                    name="Hồ sơ"
+                    component={Profile} // replace with your Profile component
+                    options={{
+                        tabBarLabel: "Hồ sơ",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="account"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : (
+                <Tab.Screen
+                    name="Login"
+                    component={Login}
+                    options={{
+                        tabBarLabel: "Đăng nhập",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="login"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            )}
         </Tab.Navigator>
     );
 }

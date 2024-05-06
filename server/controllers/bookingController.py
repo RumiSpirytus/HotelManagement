@@ -2,6 +2,7 @@ from schemas.bookingSchema import BookingSchema
 from models.room import Room
 from models.booking import Booking
 from models.customer import Customer
+from models.hotel import Hotel
 import uuid
 from fastapi import Depends, HTTPException
 from fastapi.responses import JSONResponse
@@ -37,3 +38,8 @@ class BookingController:
         db.commit()
         db.refresh(db_booking)
         return JSONResponse(content=db_booking.to_dict(), status_code=201)
+    
+    def getAllBookings(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+        rooms = db.query(Room.id, Room.logo, Room.name, Hotel.address, Booking.id, Booking.customer_id ).join(Room, Booking.room_id == Room.id).join(Hotel, Room.hotel_id == Hotel.id).all()
+        return [{"room_id": room[0], "logo": room[1], "room_name": room[2], "hotel_address": room[3], "booking_id": room[4], "customer_id": room[5]} for room in rooms]
+        

@@ -14,8 +14,67 @@ import Checkbox from "expo-checkbox";
 import Button from "../../components/Button.js";
 
 const Signup = ({ navigation }) => {
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [password, setPassword] = useState("");
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
+
+    const validateForm = () => {
+        let isValid = true;
+        let emailRegEx = /\S+@\S+\.\S+/;
+
+        if (!emailRegEx.test(email)) {
+            alert("Vui lòng nhập địa chỉ email hợp lệ.");
+            isValid = false;
+        } else if (phoneNumber.length < 10) {
+            alert("Số điện thoại phải có ít nhất 10 số.");
+            isValid = false;
+        } else if (password.length < 6) {
+            alert("Mật khẩu phải có ít nhất 6 ký tự.");
+            isValid = false;
+        } else if (!isChecked) {
+            alert("Vui lòng đồng ý với các điều khoản.");
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
+    const handleSignup = async () => {
+        if (validateForm()) {
+            formData = {
+                email: email,
+                password: password,
+                role: "customer",
+            };
+            try {
+                const response = await fetch(
+                    "http://10.0.2.2:8000/api/user/register",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(formData),
+                    }
+                );
+                let responseData = await response.json();
+                if (response.ok) {
+                    alert("Đăng ký thành công!");
+                    navigation.navigate("Login");
+                } else {
+                    if (responseData.detail == 'User already exists') {
+                        throw new Error("Email đã tồn tại!");
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+                alert(error.message || "Đã có lỗi xảy ra!");
+            }
+        }
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <View style={{ flex: 1, marginHorizontal: 22 }}>
@@ -59,9 +118,9 @@ const Signup = ({ navigation }) => {
                             placeholder="Nhập email"
                             placeholderTextColor={COLORS.black}
                             keyboardType="email-address"
-                            style={{
-                                width: "100%",
-                            }}
+                            style={{ width: "100%" }}
+                            onChangeText={setEmail}
+                            value={email}
                         />
                     </View>
                 </View>
@@ -106,9 +165,9 @@ const Signup = ({ navigation }) => {
                             placeholder="Nhập số điện thoại của bạn"
                             placeholderTextColor={COLORS.black}
                             keyboardType="numeric"
-                            style={{
-                                width: "80%",
-                            }}
+                            style={{ width: "80%" }}
+                            onChangeText={setPhoneNumber}
+                            value={phoneNumber}
                         />
                     </View>
                 </View>
@@ -140,9 +199,9 @@ const Signup = ({ navigation }) => {
                             placeholder="Nhập mật khẩu"
                             placeholderTextColor={COLORS.black}
                             secureTextEntry={isPasswordShown}
-                            style={{
-                                width: "100%",
-                            }}
+                            style={{ width: "100%" }}
+                            onChangeText={setPassword}
+                            value={password}
                         />
 
                         <TouchableOpacity
@@ -188,10 +247,8 @@ const Signup = ({ navigation }) => {
                 <Button
                     title="Đăng ký"
                     filled
-                    style={{
-                        marginTop: 18,
-                        marginBottom: 4,
-                    }}
+                    style={{ marginTop: 18, marginBottom: 4 }}
+                    onPress={handleSignup}
                 />
 
                 <View

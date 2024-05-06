@@ -13,9 +13,74 @@ import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import Button from "../../components/Button.js";
 
+import UserContext from "../../contexts/UserContext.js";
+
 const Login = ({ navigation }) => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
+
+    const { loginUser } = React.useContext(UserContext);
+
+    const validateForm = () => {
+        let isValid = true;
+        let emailRegEx = /\S+@\S+\.\S+/;
+
+        if (!emailRegEx.test(email)) {
+            alert("Vui lòng nhập email hợp lệ.");
+            isValid = false;
+        } else if (password.length < 6) {
+            alert("Mật khẩu phải chứa ít nhất 6 ký tự.");
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
+    const handleLogin = async () => {
+        if (validateForm()) {
+            // handle login
+            formData = {
+                email: email,
+                password: password,
+            };
+
+            try {
+                const response = await fetch(
+                    "http://10.0.2.2:8000/api/user/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(formData),
+                    }
+                );
+
+                let responseData = await response.json();
+
+                if (response.ok) {
+                    alert("Đăng nhập thành công.");
+
+                    // Save user data to context
+                    loginUser(responseData);
+
+                    // Navigate to Home screen
+                    navigation.navigate("Home");
+                } else {
+                    if (responseData.detail == "Incorrect email") {
+                        alert("Email không tồn tại");
+                    } else if (responseData.detail == "Incorrect password") {
+                        alert("Mật khẩu chính xác");
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+                alert(error.message || "Đã có lỗi xảy ra. Vui lòng thử lại.");
+            }
+        }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -60,9 +125,9 @@ const Login = ({ navigation }) => {
                             placeholder="Nhập email"
                             placeholderTextColor={COLORS.black}
                             keyboardType="email-address"
-                            style={{
-                                width: "100%",
-                            }}
+                            style={{ width: "100%" }}
+                            onChangeText={setEmail}
+                            value={email}
                         />
                     </View>
                 </View>
@@ -94,9 +159,9 @@ const Login = ({ navigation }) => {
                             placeholder="Nhập mật khẩu"
                             placeholderTextColor={COLORS.black}
                             secureTextEntry={isPasswordShown}
-                            style={{
-                                width: "100%",
-                            }}
+                            style={{ width: "100%" }}
+                            onChangeText={setPassword}
+                            value={password}
                         />
 
                         <TouchableOpacity
@@ -142,10 +207,8 @@ const Login = ({ navigation }) => {
                 <Button
                     title="Đăng nhập"
                     filled
-                    style={{
-                        marginTop: 18,
-                        marginBottom: 4,
-                    }}
+                    style={{ marginTop: 18, marginBottom: 4 }}
+                    onPress={handleLogin}
                 />
 
                 <View
