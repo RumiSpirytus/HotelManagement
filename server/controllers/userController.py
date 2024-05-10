@@ -79,9 +79,26 @@ class UserController:
         if not verify_password(user.password, hashed_password):
             raise HTTPException(status_code=400, detail="Incorrect password")
         
+        #find customer, employee or manager
+        if db_user.role == "customer":
+            db_customer = db.query(Customer).filter(Customer.user_id == db_user.id).first()
+            user_role = "customer"
+            role_id = db_customer.id
+        elif db_user.role == "employee":
+            db_employee = db.query(Employee).filter(Employee.user_id == db_user.id).first()
+            user_role = "employee"
+            role_id = db_employee.id
+        elif db_user.role == "manager":
+            db_manager = db.query(Manager).filter(Manager.user_id == db_user.id).first()
+            user_role = "manager"
+            role_id = db_manager.id
+
         return {
             "access_token": create_access_token(db_user.email),
-            "refresh_token": create_refresh_token(db_user.email)
+            "refresh_token": create_refresh_token(db_user.email),
+            "user_id": str(db_user.id),
+            "role": user_role,
+            "role_id": str(role_id)
         }
     
 

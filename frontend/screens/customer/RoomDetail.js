@@ -25,8 +25,33 @@ import { AntDesign } from "@expo/vector-icons";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+import UserContext from "../../contexts/UserContext";
+import BookingContext from "../../contexts/BookingContext";
+
 const RoomDetail = ({ navigation, route }) => {
+    const { user, count, increaseCount } = React.useContext(UserContext);
+    const {getBooking} = React.useContext(BookingContext);
     const room_id = route.params.id;
+
+    const [isBooked, setIsBooked] = useState(false);
+
+    useEffect(() => {
+        getBooking().then((data) => {
+            if (data) {
+                data.forEach((booking) => {
+                    if (booking.room_id == route.params.id) {
+                        setIsBooked(true);
+                    }
+                });
+            }
+        });
+    }, [count]);
+
+    let customer_id
+    if (user) {
+        customer_id = user.role_id;
+    }
+
     const [room, setRoom] = useState({});
     useEffect(() => {
         const fetchRoomDetail = async () => {
@@ -134,8 +159,9 @@ const RoomDetail = ({ navigation, route }) => {
 
     async function handleSubmit() {
         if (validForm()) {
+
             formData = {
-                customer_id: "d8ba2391-8ae1-43cf-b294-e36937b5ad02",
+                customer_id: customer_id,
                 room_id: room_id,
                 check_in: date,
                 guest_quantity: formPeople,
@@ -143,7 +169,6 @@ const RoomDetail = ({ navigation, route }) => {
                 customer_email: formEmail,
                 customer_phone: formPhone,
             };
-            console.log(formData);
 
             const response = await fetch("http://10.0.2.2:8000/api/booking", {
                 method: "POST",
@@ -155,6 +180,7 @@ const RoomDetail = ({ navigation, route }) => {
 
             if (response.ok) {
                 alert("Đặt phòng thành công");
+                increaseCount();
             } else {
                 alert("Đặt phòng thất bại");
             }
@@ -380,12 +406,18 @@ const RoomDetail = ({ navigation, route }) => {
                 </View>
 
                 <Center style={{ marginTop: 10 }}>
-                    <Button
-                        onPress={() => setShowModal(true)}
+                    {!isBooked? <Button
+                        onPress={() => {
+                            if (user) {
+                                setShowModal(true);
+                            } else {
+                                navigation.navigate("Login");
+                            }
+                        }}
                         style={{ width: 250 }}
                     >
                         Đặt phòng ngay
-                    </Button>
+                    </Button> : <Text style={{fontSize: 20, fontWeight: 'bold', color: 'red'}}>Bạn đã đặt phòng này</Text>}
                     <Modal
                         isOpen={showModal}
                         onClose={() => setShowModal(false)}

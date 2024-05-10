@@ -1,10 +1,11 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { styled } from "nativewind";
 
 import { Image } from "native-base";
 
 const StyledView = styled(View);
-const StyledText = styled(Text);
+
+import { Box, Text } from "native-base";
 
 import { TouchableOpacity } from "react-native";
 
@@ -19,15 +20,15 @@ export default function RoomBooked({
     size,
 }) {
     const handlePress = () => {
-        navigation.navigate("RoomDetail", { id: room_id });
+        navigation.navigate("BookingDetail", { id: booking_id, name: name, address: address, image: image});
     };
 
     return (
         <TouchableOpacity onPress={handlePress}>
             <StyledView
                 style={{
-                    width: 200,
-                    height: 300,
+                    width: "100%",
+                    height: "auto",
                     borderRadius: 10,
                     paddingBottom: 10,
                     marginRight: 16,
@@ -42,8 +43,8 @@ export default function RoomBooked({
                         source={{
                             uri: `${image}`,
                         }}
-                        width={200}
-                        height={140}
+                        width={400}
+                        height={200}
                         alt="hotel logo"
                         style={{
                             borderTopLeftRadius: 10,
@@ -51,40 +52,16 @@ export default function RoomBooked({
                         }}
                     />
                 </StyledView>
-                <StyledView
-                    style={{
-                        flexWrap: "wrap",
-                        alignItems: "center",
-                        gap: 6,
-                        justifyContent: "space-between",
-                        height: 140,
 
-                    }}
-                >
-                    <StyledView>
-                        <StyledText
-                            style={{ textAlign: "center", fontWeight: "bold" }}
-                        >
+                <Box style={{ display: "flex", gap: 4 }}>
+                    <View>
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                             {name}
-                        </StyledText>
-                    </StyledView>
-                    <StyledView >
-                        {size ? (
-                            <StyledText style={{ textAlign: "center" }}>
-                                {size} m2
-                            </StyledText>
-                        ) : (
-                            <StyledText style={{ textAlign: "center" }}>
-                                {address}
-                            </StyledText>
-                        )}
-                    </StyledView>
-                    <StyledView>
-                        <StyledText style={{ textAlign: "center", fontWeight: '500' }}>
-                            Mã đặt phòng: {booking_id}
-                        </StyledText>
-                    </StyledView>
-                </StyledView>
+                        </Text>
+                    </View>
+
+                    <Text style={{ fontSize: 14 }}>{address}</Text>
+                </Box>
             </StyledView>
         </TouchableOpacity>
     );
