@@ -8,6 +8,8 @@ import { AntDesign } from "@expo/vector-icons";
 
 import AvailableRoom from "../../components/customer/AvailableRoom";
 
+import { BASE_URL } from "../../utils";
+
 const HotelDetail = ({ navigation, route }) => {
     const hotel_id = route.params.id;
     const [hotel, setHotel] = useState({});
@@ -16,7 +18,7 @@ const HotelDetail = ({ navigation, route }) => {
         const fetchHotelDetail = async () => {
             try {
                 const res = await fetch(
-                    `http://10.0.2.2:8000/api/hotel/${hotel_id}`
+                    `${BASE_URL}/api/hotel/${hotel_id}`
                 );
                 const data = await res.json();
                 setHotel(data);
@@ -28,7 +30,7 @@ const HotelDetail = ({ navigation, route }) => {
         const fetchRooms = async () => {
             try {
                 const res = await fetch(
-                    `http://10.0.2.2:8000/api/room/hotel/${hotel_id}`
+                    `${BASE_URL}/api/room/hotel/${hotel_id}`
                 );
                 const data = await res.json();
                 setRooms(data);
@@ -155,7 +157,7 @@ const HotelDetail = ({ navigation, route }) => {
                     </Text>
 
                     {rooms && rooms.length > 0 ? (
-                        <ScrollView horizontal>
+                        <ScrollView horizontal style={{marginBottom: 40}}>
                             <View className="flex flex-row">
                                 {rooms.map((room) => (
                                     <AvailableRoom
@@ -172,7 +174,7 @@ const HotelDetail = ({ navigation, route }) => {
                             </View>
                         </ScrollView>
                     ) : (
-                        <Text style={{ fontSize: 16 }}>
+                        <Text style={{ fontSize: 16, marginBottom: 40 }}>
                             Khách sạn hiện không còn phòng khả dụng
                         </Text>
                     )}
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
     location: {
         fontSize: 16,
         color: "gray",
+        lineHeight: 24,
     },
     ratingContainer: {
         flexDirection: "row",
@@ -221,6 +224,7 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 16,
         color: "gray",
+        lineHeight: 24,
     },
     readMore: {
         color: "blue",

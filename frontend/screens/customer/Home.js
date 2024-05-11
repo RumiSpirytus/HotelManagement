@@ -18,6 +18,8 @@ import { useState, useEffect } from "react";
 import AvailableRoom from "../../components/customer/AvailableRoom";
 import PopularHotel from "../../components/customer/PopularHotel";
 
+import { BASE_URL } from "../../utils";
+
 export default function Home({ navigation }) {
     const [availableRooms, setAvailableRooms] = useState([]);
     const [searchRooms, setSearchRooms] = useState(null);
@@ -30,9 +32,7 @@ export default function Home({ navigation }) {
     useEffect(() => {
         const fetchAvailableRooms = async () => {
             try {
-                const response = await fetch(
-                    "http://10.0.2.2:8000/api/room/available"
-                );
+                const response = await fetch(`${BASE_URL}/api/room/available`);
 
                 if (response.ok) {
                     const data = await response.json();
@@ -44,9 +44,7 @@ export default function Home({ navigation }) {
         };
         const fetchPopularHotel = async () => {
             try {
-                const response = await fetch(
-                    "http://10.0.2.2:8000/api/hotel/popular"
-                );
+                const response = await fetch(`${BASE_URL}/api/hotel/popular`);
                 if (response.ok) {
                     const data = await response.json();
                     setPopularHotel(data);
@@ -64,7 +62,7 @@ export default function Home({ navigation }) {
         const fetchSearchRooms = async () => {
             try {
                 const response = await fetch(
-                    `http://10.0.2.2:8000/api/search/room?room_name=${formRoomName}&hotel_address=${formHotelAddress}&hotel_name=${formHotelName}&price=${formPrice}`
+                    `${BASE_URL}/api/search/room?room_name=${formRoomName}&hotel_address=${formHotelAddress}&hotel_name=${formHotelName}&price=${formPrice}`
                 );
                 if (response.ok) {
                     const data = await response.json();
@@ -85,10 +83,13 @@ export default function Home({ navigation }) {
 
     return (
         <ScrollView>
-            <StyledView className=" flex flex-col">
+            <StyledView className=" flex flex-col" style={{ paddingTop: 16 }}>
                 {/* tìm kiếm  */}
-                <StyledView className=" p-4 bg-white">
-                    <StyledView className=" bg-white shadow-lg rounded-lg flex flex-col gap-4 mt-1">
+                <StyledView className=" p-4 ">
+                    <StyledView
+                        className=" shadow-lg rounded-lg flex flex-col gap-4 mt-1"
+
+                    >
                         <Box alignItems="center">
                             <Box w="100%">
                                 <FormControl className="flex flex-col gap-2">

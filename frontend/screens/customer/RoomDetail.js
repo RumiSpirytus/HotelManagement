@@ -28,6 +28,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import UserContext from "../../contexts/UserContext";
 import BookingContext from "../../contexts/BookingContext";
 
+import { BASE_URL } from "../../utils";
+
 const RoomDetail = ({ navigation, route }) => {
     const { user, count, increaseCount } = React.useContext(UserContext);
     const {getBooking} = React.useContext(BookingContext);
@@ -57,7 +59,7 @@ const RoomDetail = ({ navigation, route }) => {
         const fetchRoomDetail = async () => {
             try {
                 const res = await fetch(
-                    `http://10.0.2.2:8000/api/room/${room_id}`
+                    `${BASE_URL}/api/room/${room_id}`
                 );
                 const data = await res.json();
                 setRoom(data);
@@ -170,7 +172,7 @@ const RoomDetail = ({ navigation, route }) => {
                 customer_phone: formPhone,
             };
 
-            const response = await fetch("http://10.0.2.2:8000/api/booking", {
+            const response = await fetch(`${BASE_URL}/api/booking`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -414,10 +416,10 @@ const RoomDetail = ({ navigation, route }) => {
                                 navigation.navigate("Login");
                             }
                         }}
-                        style={{ width: 250 }}
+                        style={{ width: 250, marginBottom: 40 }}
                     >
                         Đặt phòng ngay
-                    </Button> : <Text style={{fontSize: 20, fontWeight: 'bold', color: 'red'}}>Bạn đã đặt phòng này</Text>}
+                    </Button> : <Text style={{fontSize: 20, fontWeight: 'bold', color: 'red', marginBottom: 40}}>Bạn đã đặt phòng này</Text>}
                     <Modal
                         isOpen={showModal}
                         onClose={() => setShowModal(false)}
@@ -569,6 +571,7 @@ const RoomDetail = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     card: {
         flex: 1,
+        paddingBottom: 10
     },
     image: {
         width: "100%",

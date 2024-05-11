@@ -13,11 +13,13 @@ import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import Button from "../../components/Button.js";
 
+import { BASE_URL } from "../../utils.js";
+
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
-    const [isPasswordShown, setIsPasswordShown] = useState(false);
+    const [isPasswordShown, setIsPasswordShown] = useState(true);
     const [isChecked, setIsChecked] = useState(false);
 
     const validateForm = () => {
@@ -50,7 +52,7 @@ const Signup = ({ navigation }) => {
             };
             try {
                 const response = await fetch(
-                    "http://10.0.2.2:8000/api/user/register",
+                    `${BASE_URL}/api/user/register`,
                     {
                         method: "POST",
                         headers: {
@@ -152,7 +154,6 @@ const Signup = ({ navigation }) => {
                         <TextInput
                             placeholder="+84"
                             placeholderTextColor={COLORS.black}
-                            keyboardType="numeric"
                             style={{
                                 width: "12%",
                                 borderRightWidth: 1,
@@ -164,7 +165,6 @@ const Signup = ({ navigation }) => {
                         <TextInput
                             placeholder="Nhập số điện thoại của bạn"
                             placeholderTextColor={COLORS.black}
-                            keyboardType="numeric"
                             style={{ width: "80%" }}
                             onChangeText={setPhoneNumber}
                             value={phoneNumber}

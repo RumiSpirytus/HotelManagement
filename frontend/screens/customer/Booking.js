@@ -18,8 +18,7 @@ const Booking = ({ navigation, route }) => {
     }, [count]);
 
     return (
-        <View style={{ paddingTop: 20 }}>
-            {/* Phòng còn trống */}
+        <View style={{ paddingTop: 40 }}>
             <View
                 style={{
                     display: "flex",

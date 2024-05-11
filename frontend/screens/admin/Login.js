@@ -15,10 +15,12 @@ import Button from "../../components/Button.js";
 
 import UserContext from "../../contexts/UserContext.js";
 
+import { BASE_URL } from "../../utils.js";
+
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isPasswordShown, setIsPasswordShown] = useState(false);
+    const [isPasswordShown, setIsPasswordShown] = useState(true);
     const [isChecked, setIsChecked] = useState(false);
 
     const { loginUser } = React.useContext(UserContext);
@@ -48,7 +50,7 @@ const Login = ({ navigation }) => {
 
             try {
                 const response = await fetch(
-                    "http://10.0.2.2:8000/api/user/login",
+                    `${BASE_URL}/api/user/login`,
                     {
                         method: "POST",
                         headers: {
@@ -72,7 +74,7 @@ const Login = ({ navigation }) => {
                     if (responseData.detail == "Incorrect email") {
                         alert("Email không tồn tại");
                     } else if (responseData.detail == "Incorrect password") {
-                        alert("Mật khẩu chính xác");
+                        alert("Mật khẩu không chính xác!");
                     }
                 }
             } catch (error) {

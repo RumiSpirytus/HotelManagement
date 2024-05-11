@@ -13,7 +13,6 @@ class Customer(Base):
     phone_num = Column(String, nullable=True)
     bank_num = Column(String, nullable=True)
     bank_name = Column(String, nullable=True)
-    citizen_id = Column(String, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 

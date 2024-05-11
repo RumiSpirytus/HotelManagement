@@ -25,7 +25,7 @@ async def create_new_user(user: UserSchema, db: Session = Depends(get_db)):
     
     return UserController.create_user(user, db)
 
-@router.get("/{email}")
+@router.get("/email/{email}")
 async def get_user_by_email(email: str, db: Session = Depends(get_db)):
     user = UserController.get_user_by_email(email, db)
     if user is None:

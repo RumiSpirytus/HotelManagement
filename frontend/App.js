@@ -30,7 +30,7 @@ export default function App() {
             <BookingProvider>
                 <NativeBaseProvider>
                     <NavigationContainer>
-                        <Stack.Navigator initialRouteName="MyTabs">
+                        <Stack.Navigator initialRouteName="Trang chủ">
                             {/* <Stack.Screen
                         name="Login"
                         component={Login}
@@ -42,7 +42,7 @@ export default function App() {
                                 options={{ headerShown: false }}
                             />
                             <Stack.Screen
-                                name="MyTabs"
+                                name="Trang chủ"
                                 component={MyTabs}
                                 options={{ headerShown: false }}
                             />
