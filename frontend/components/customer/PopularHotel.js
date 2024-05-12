@@ -1,19 +1,18 @@
-import { View, Text } from "react-native";
-import { styled } from "nativewind";
-
-import { Image } from "native-base";
-
-const StyledView = styled(View);
-const StyledText = styled(Text);
-
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
 import {
-    AntDesign
-} from "@expo/vector-icons";
+    Image,
+    Text,
+    View,
+    Box,
+    Stack,
+    HStack,
+    Heading,
+    Center,
+    AspectRatio,
+} from "native-base";
 
 import { TouchableOpacity } from "react-native";
+
+import { AntDesign } from "@expo/vector-icons";
 
 export default function PopularHotel({
     id,
@@ -29,57 +28,82 @@ export default function PopularHotel({
 
     return (
         <TouchableOpacity onPress={handlePress}>
-            <StyledView
-                style={{
-                    width: 200,
-                    height: 300,
-                    borderRadius: 10,
-                    paddingBottom: 10,
-                    marginRight: 16,
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "#fff",
-                    gap: 10,
-                }}
-            >
-                <StyledView className="mb-2">
-                    <Image
-                        source={{
-                            uri: `${logo}`,
-                        }}
-                        width={200}
-                        height={140}
-                        alt="hotel logo"
-                        style={{
-                            borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10,
-                        }}
-                    />
-                </StyledView>
-                <StyledView style={{ flexWrap: "wrap", alignItems: "center", gap: 6, justifyContent: 'space-between', height: 140}}>
-                    <StyledView>
-                        <StyledText style={{ textAlign: "center", fontWeight: "bold" }}>
-                            {name}
-                        </StyledText>
-                    </StyledView>
-                    <StyledView className="">
-                        <StyledText style={{ textAlign: "center" }}>
-                            {address}
-                        </StyledText>
-                    </StyledView>
-                    <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 4,
-                                alignItems: "center",
-                            }}
+            <Box alignItems="center">
+                <Box
+                    maxW="80"
+                    minHeight={400}
+                    rounded="lg"
+                    overflow="hidden"
+                    borderColor="coolGray.200"
+                    borderWidth="1"
+                    _dark={{
+                        borderColor: "coolGray.600",
+                        backgroundColor: "gray.700",
+                    }}
+                    _web={{
+                        shadow: 2,
+                        borderWidth: 0,
+                    }}
+                    _light={{
+                        backgroundColor: "gray.50",
+                    }}
+                >
+                    <Box>
+                        <AspectRatio w="100%" ratio={16 / 9}>
+                            <Image
+                                source={{
+                                    uri: `${logo}`,
+                                }}
+                                alt="image"
+                            />
+                        </AspectRatio>
+                    </Box>
+                    <Stack p="4" space={3}>
+                        <Stack space={2}>
+                            <Heading size="md" ml="-1">
+                                {name}
+                            </Heading>
+                            <Text
+                                fontSize="xs"
+                                _light={{
+                                    color: "violet.500",
+                                }}
+                                _dark={{
+                                    color: "violet.400",
+                                }}
+                                fontWeight="500"
+                                ml="-0.5"
+                                mt="-1"
+                            >
+                                {address}
+                            </Text>
+                        </Stack>
+                        <HStack
+                            alignItems="center"
+                            space={4}
+                            justifyContent="space-between"
                         >
-                            <Text style={{fontWeight: "500"}}>{rating}</Text>
-                            <AntDesign name="star" size={16} color="#fe8813" />
-                        </View>
-                </StyledView>
-            </StyledView>
+                            <View style={{display: 'flex', flexDirection: 'row', gap: 6, alignItems: 'center'}}>
+                                <Text
+                                    color="coolGray.600"
+                                    _dark={{
+                                        color: "warmGray.200",
+                                    }}
+                                    fontWeight="400"
+                                    fontSize={14}
+                                >
+                                    {rating}
+                                </Text>
+                                <AntDesign
+                                    name="star"
+                                    size={20}
+                                    color="#f7d003"
+                                />
+                            </View>
+                        </HStack>
+                    </Stack>
+                </Box>
+            </Box>
         </TouchableOpacity>
     );
 }

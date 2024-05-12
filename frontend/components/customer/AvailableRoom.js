@@ -69,7 +69,7 @@ export default function AvailableRoom({
                             {name}
                         </StyledText>
                     </StyledView>
-                    <StyledView className="">
+                    <StyledView style={{paddingHorizontal: 10}}>
                         {size ? <StyledText style={{ textAlign: "center" }}>
                             {size} m2
                         </StyledText> : <StyledText style={{ textAlign: "center" }}>
