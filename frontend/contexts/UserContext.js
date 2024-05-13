@@ -39,6 +39,8 @@ export const UserProvider = ({ children }) => {
         }
     };
 
+    
+
     return (
         <UserContext.Provider
             value={{ user, loginUser, logoutUser, count, increaseCount, getUserInfo, userInfo}}

@@ -69,7 +69,9 @@ const Login = ({ navigation }) => {
                     loginUser(responseData);
 
                     // Navigate to Home screen
-                    navigation.navigate("Home");
+                    if (responseData.role == "customer") {
+                        navigation.navigate("Home");
+                    }
                 } else {
                     if (responseData.detail == "Incorrect email") {
                         alert("Email không tồn tại");

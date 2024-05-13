@@ -21,6 +21,7 @@ const Signup = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [isPasswordShown, setIsPasswordShown] = useState(true);
     const [isChecked, setIsChecked] = useState(false);
+    const [isManager, setIsManager] = useState(false);
 
     const validateForm = () => {
         let isValid = true;
@@ -48,25 +49,22 @@ const Signup = ({ navigation }) => {
             formData = {
                 email: email,
                 password: password,
-                role: "customer",
+                role: isManager ? "manager" : "customer",
             };
             try {
-                const response = await fetch(
-                    `${BASE_URL}/api/user/register`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(formData),
-                    }
-                );
+                const response = await fetch(`${BASE_URL}/api/user/register`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
                 let responseData = await response.json();
                 if (response.ok) {
                     alert("Đăng ký thành công!");
                     navigation.navigate("Login");
                 } else {
-                    if (responseData.detail == 'User already exists') {
+                    if (responseData.detail == "User already exists") {
                         throw new Error("Email đã tồn tại!");
                     }
                 }
@@ -124,6 +122,23 @@ const Signup = ({ navigation }) => {
                             onChangeText={setEmail}
                             value={email}
                         />
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            marginTop: 10,
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Checkbox
+                            style={{ marginRight: 8 }}
+                            value={isManager}
+                            onValueChange={setIsManager}
+                            color={isManager ? COLORS.primary : undefined}
+                        />
+
+                        <Text style={{}}>Bạn là chủ khách sạn?</Text>
                     </View>
                 </View>
 
@@ -232,6 +247,7 @@ const Signup = ({ navigation }) => {
                     style={{
                         flexDirection: "row",
                         marginVertical: 6,
+                        alignItems: "center",
                     }}
                 >
                     <Checkbox
@@ -241,7 +257,9 @@ const Signup = ({ navigation }) => {
                         color={isChecked ? COLORS.primary : undefined}
                     />
 
-                    <Text>Tôi đồng ý với các điều khoản</Text>
+                    <Text style={{ fontStyle: "italic" }}>
+                        Tôi đồng ý với các điều khoản
+                    </Text>
                 </View>
 
                 <Button

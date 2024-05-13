@@ -14,7 +14,7 @@ import { TouchableOpacity } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
 
-export default function PopularHotel({
+export default function MyHotel({
     id,
     logo,
     name,
@@ -23,7 +23,14 @@ export default function PopularHotel({
     navigation,
 }) {
     const handlePress = () => {
-        navigation.navigate("HotelDetail", { id: id });
+        navigation.navigate("ManagerHotel", {
+            hotel_id: id,
+            logo,
+            name,
+            address,
+            rating,
+            
+        });
     };
 
     return (
@@ -31,11 +38,11 @@ export default function PopularHotel({
             <Box alignItems="center">
                 <Box
                     maxWidth={300}
-                    minHeight={350}
+                    minHeight={300}
                     rounded="lg"
                     overflow="hidden"
-                    borderColor="coolGray.200"
-                    borderWidth="1"
+                    borderColor="coolGray.400"
+                    borderWidth="2"
                     _dark={{
                         borderColor: "coolGray.600",
                         backgroundColor: "gray.700",
@@ -47,6 +54,7 @@ export default function PopularHotel({
                     _light={{
                         backgroundColor: "gray.50",
                     }}
+                    marginRight={2}
                 >
                     <Box>
                         <AspectRatio w="100%" ratio={16 / 9}>
@@ -83,7 +91,14 @@ export default function PopularHotel({
                             space={4}
                             justifyContent="space-between"
                         >
-                            <View style={{display: 'flex', flexDirection: 'row', gap: 6, alignItems: 'center'}}>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 6,
+                                    alignItems: "center",
+                                }}
+                            >
                                 <Text
                                     color="coolGray.600"
                                     _dark={{

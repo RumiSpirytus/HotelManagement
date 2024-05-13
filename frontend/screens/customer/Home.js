@@ -221,7 +221,7 @@ export default function Home({ navigation }) {
                     </StyledView>
 
                     <ScrollView horizontal>
-                        <StyledView className="flex flex-row">
+                        <StyledView style={{display: 'flex', flexDirection: 'row', gap: 12}}>
                             {popularHotel.map((hotel) => (
                                 <PopularHotel
                                     key={hotel.id}

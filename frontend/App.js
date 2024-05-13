@@ -13,11 +13,18 @@ import Booking from "./screens/customer/Booking";
 import Profile from "./screens/customer/Profile";
 import UserContext from "./contexts/UserContext";
 
+//manager
+import MangerHome from "./screens/manager/ManagerHome";
+import RegisterHotel from "./screens/manager/RegisterHotel";
+import ManagerProfile from "./screens/manager/ManagerProfile";
+import ManagerHotel from "./screens/manager/ManagerHotel";
+
 import { NativeBaseProvider, View } from "native-base";
 
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -66,6 +73,11 @@ export default function App() {
                                 component={BookingDetail}
                                 options={{ title: "Xem đơn đặt phòng" }}
                             />
+                            <Stack.Screen
+                                name="ManagerHotel"
+                                component={ManagerHotel}
+                                options={{ title: "Quản lý khách sạn" }}
+                            />
                         </Stack.Navigator>
                     </NavigationContainer>
                 </NativeBaseProvider>
@@ -86,14 +98,15 @@ function MyTabs() {
                 tabBarVisible: route.name !== "Login", // Hide tab bar on Login screen
             })}
         >
+            {/* customer menu  */}
             <Tab.Screen
-                name="Home"
-                component={Home}
+                name="Manager"
+                component={MangerHome}
                 options={{
-                    tabBarLabel: "Trang chủ",
+                    tabBarLabel: "Quản lý",
                     tabBarIcon: () => (
                         <MaterialCommunityIcons
-                            name="home"
+                            name="account"
                             color="#000"
                             size={20}
                         />
@@ -101,7 +114,24 @@ function MyTabs() {
                 }}
             />
 
-            {user ? (
+            {/* {!user || user.role === "customer" ? (
+                <Tab.Screen
+                    name="Home"
+                    component={Home}
+                    options={{
+                        tabBarLabel: "Trang chủ",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="home"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : null} */}
+
+            {user && user.role === "customer" ? (
                 <Tab.Screen
                     name="Booking"
                     component={Booking}
@@ -117,10 +147,11 @@ function MyTabs() {
                     }}
                 />
             ) : null}
-            {user ? (
+
+            {user && user.role === "customer" ? (
                 <Tab.Screen
                     name="Hồ sơ"
-                    component={Profile} // replace with your Profile component
+                    component={Profile}
                     options={{
                         tabBarLabel: "Hồ sơ",
                         tabBarIcon: () => (
@@ -132,7 +163,73 @@ function MyTabs() {
                         ),
                     }}
                 />
-            ) : (
+            ) : null}
+
+            {/* manager menu  */}
+            {user && user.role === "manager" ? (
+                <Tab.Screen
+                    name="Manager"
+                    component={MangerHome}
+                    options={{
+                        tabBarLabel: "Quản lý",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="account"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : null}
+
+            {user && user.role === "manager" ? (
+                <Tab.Screen
+                    name="Hồ sơ"
+                    component={ManagerProfile}
+                    options={{
+                        tabBarLabel: "Hồ sơ",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="account"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : null}
+
+            <Tab.Screen
+                name="RegisterHotel"
+                component={RegisterHotel}
+                options={{
+                    tabBarLabel: "Đăng ký khách sạn",
+                    tabBarIcon: () => (
+                        <AntDesign name="pluscircle" size={20} color="black" />
+                    ),
+                }}
+            />
+
+            {/* {user && user.role === "manager" ? (
+                <Tab.Screen
+                    name="RegisterHotel"
+                    component={RegisterHotel}
+                    options={{
+                        tabBarLabel: "Đăng ký khách sạn",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="hotel"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : null} */}
+
+            {/* general menu  */}
+            {!user ? (
                 <Tab.Screen
                     name="Login"
                     component={Login}
@@ -147,7 +244,7 @@ function MyTabs() {
                         ),
                     }}
                 />
-            )}
+            ) : null}
         </Tab.Navigator>
     );
 }
