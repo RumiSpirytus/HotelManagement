@@ -1,15 +1,29 @@
-import { ScrollView, View, Text, Image } from "native-base";
+import {
+    ScrollView,
+    View,
+    Text,
+    Image,
+    Modal,
+    Center,
+    Button,
+    FormControl,
+    Input,
+    Checkbox,
+} from "native-base";
 
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
-import { Badge } from "native-base";
+
+import HotelCard from "../../components/manager/HotelCard";
+import EmployeeCard from "../../components/manager/EmployeeCard";
+
+import { useState } from "react";
 
 const roomsData = [
     {
         id: 1,
-        name: "Phòng 1",
+        name: "Phòng VIP",
         price: 1000000,
         logo: "https://www.newworldhotels.com/wp-content/uploads/2014/05/Mobile-NWHBR-Exterior.jpg",
         images: [
@@ -34,7 +48,7 @@ const roomsData = [
     },
     {
         id: 2,
-        name: "Phòng 2",
+        name: "Phòng thường",
         price: 2000000,
         logo: "https://truongcaodangnauan.edu.vn/test_disk/photos/shares/hotel-la-gi.jpg",
         images: [
@@ -59,7 +73,7 @@ const roomsData = [
     },
     {
         id: 3,
-        name: "Phòng 3",
+        name: "Phòng VIP",
         price: 3000000,
         logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7aXQLauaQQ3wCLhfiVItL8rNu8xrVveCAHAQPCbThRw&s",
         images: [
@@ -84,6 +98,27 @@ const roomsData = [
     },
 ];
 
+const employeesData = [
+    {
+        id: 1,
+        first_name: "Nguyễn",
+        last_name: "Văn A",
+        phone_num: "0123456789",
+    },
+    {
+        id: 2,
+        first_name: "Nguyễn",
+        last_name: "Văn B",
+        phone_num: "0123456789",
+    },
+    {
+        id: 3,
+        first_name: "Nguyễn",
+        last_name: "Văn C",
+        phone_num: "0123456789",
+    },
+];
+
 export default function ManagerHotel({ route, navigation }) {
     const hotel_id = route.params.hotel_id;
     const logo = route.params.logo;
@@ -91,14 +126,22 @@ export default function ManagerHotel({ route, navigation }) {
     const address = route.params.address;
     const rating = route.params.rating;
 
+    const [showModal, setShowModal] = useState(false);
+    const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+
     return (
-        <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+        <ScrollView
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                paddingBottom: 120,
+            }}
+        >
             <Image
                 source={{ uri: logo }}
                 style={{ width: "100%", height: 200 }}
                 alt="Image"
             />
-
             <View
                 style={{
                     display: "flex",
@@ -149,7 +192,12 @@ export default function ManagerHotel({ route, navigation }) {
             </View>
 
             {/* Danh  sách phòng  */}
-            <View style={{ paddingHorizontal: 20, paddingVertical: 20 }}>
+            <View
+                style={{
+                    paddingHorizontal: 20,
+                    paddingVertical: 20,
+                }}
+            >
                 <Text
                     style={{
                         fontSize: 25,
@@ -160,192 +208,182 @@ export default function ManagerHotel({ route, navigation }) {
                     Danh sách phòng
                 </Text>
 
-                <View style={{display: 'flex', gap: 10}}>
-                <View
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: 20,
-                        borderWidth: 1,
-                        borderColor: "#a8a7a7",
-                        borderRadius: 10,
-                        paddingHorizontal: 10,
-                        paddingVertical: 15,
-                        backgroundColor: "white",
-                    }}
-                >
-                    <Image
-                        source={{
-                            uri: "https://www.kayak.co.uk/news/wp-content/uploads/sites/5/2023/08/THEME_HOTEL_SIGN_FIVE_STARS_FACADE_BUILDING_GettyImages-1320779330-3.jpg",
-                        }}
-                        alt="room"
-                        style={{
-                            width: 100,
-                            height: 100,
-                            borderRadius: 10,
-                            flexBasis: "30%",
-                        }}
-                    />
-
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 4,
-                            justifyContent: "space-between",
-                            flexBasis: "70%",
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontWeight: "600",
-                                fontSize: 16,
-                                marginLeft: 4,
-                            }}
-                        >
-                            Phòng thường
-                        </Text>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 2,
-                                alignItems: "center",
-                            }}
-                        >
-                            <Entypo
-                                name="location-pin"
-                                size={24}
-                                color="#5e7cfa"
-                            />
-                            <Text>Phòng 202</Text>
-                        </View>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 2,
-                                alignItems: "center",
-                            }}
-                        >
-                            <Entypo name="star" size={24} color="#ffd81c" />
-                            <Text>4.5</Text>
-                        </View>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                paddingLeft: 4,
-                                paddingRight: 30,
-                            }}
-                        >
-                            <Text>500.000 VNĐ</Text>
-                            <Badge colorScheme="success">Trống</Badge>
-                            {/* <Badge colorScheme="danger">DANGER</Badge>
-                            <Badge colorScheme="info">INFO</Badge>
-                            <Badge colorScheme="coolGray">DARK</Badge> */}
-                        </View>
-                    </View>
-
-                    
+                <View style={{ display: "flex", gap: 10 }}>
+                    {roomsData.map((room) => (
+                        <HotelCard key={room.id} {...room} />
+                    ))}
                 </View>
 
-                <View
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: 20,
-                        borderWidth: 1,
-                        borderColor: "#a8a7a7",
-                        borderRadius: 10,
-                        paddingHorizontal: 10,
-                        paddingVertical: 15,
-                        backgroundColor: "white",
-                    }}
-                >
-                    <Image
-                        source={{
-                            uri: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ed/95/07/limak-eurasia-luxury.jpg?w=700&h=-1&s=1"
-                        }}
-                        alt="room"
-                        style={{
-                            width: 100,
-                            height: 100,
-                            borderRadius: 10,
-                            flexBasis: "30%",
-                        }}
-                    />
-
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 4,
-                            justifyContent: "space-between",
-                            flexBasis: "70%",
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontWeight: "600",
-                                fontSize: 16,
-                                marginLeft: 4,
-                            }}
-                        >
-                            Phòng VIP
-                        </Text>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 2,
-                                alignItems: "center",
-                            }}
-                        >
-                            <Entypo
-                                name="location-pin"
-                                size={24}
-                                color="#5e7cfa"
-                            />
-                            <Text>Phòng 401</Text>
-                        </View>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 2,
-                                alignItems: "center",
-                            }}
-                        >
-                            <Entypo name="star" size={24} color="#ffd81c" />
-                            <Text>5</Text>
-                        </View>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                paddingLeft: 4,
-                                paddingRight: 30,
-                            }}
-                        >
-                            <Text>1.000.000 VNĐ</Text>
-                            {/* <Badge colorScheme="success">Trống</Badge> */}
-                            <Badge colorScheme="danger">Hết</Badge>
-                            {/* <Badge colorScheme="info">INFO</Badge>
-                            <Badge colorScheme="coolGray">DARK</Badge> */}
-                        </View>
-                    </View>
-
-                    
-                </View>
-
-                </View>
-
+                {/* thêm phòng  */}
+                <AntDesign
+                    name="plussquare"
+                    size={24}
+                    color="#00dc81"
+                    style={{ alignSelf: "center", marginTop: 10, fontSize: 30 }}
+                    onPress={() => setShowModal(true)}
+                />
             </View>
+
+            {/* modal thêm phòng  */}
+            <Center>
+                <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+                    <Modal.Content maxWidth="400px">
+                        <Modal.CloseButton />
+                        <Modal.Header>Thêm phòng</Modal.Header>
+                        <Modal.Body>
+                            <FormControl>
+                                <FormControl.Label>Tên phòng</FormControl.Label>
+                                <Input placeholder="Phòng VIP" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Logo</FormControl.Label>
+                                <Input placeholder="URL" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Ảnh phòng</FormControl.Label>
+                                <Input placeholder="URLs (ngăn cách bởi dấu phẩy)" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>
+                                    Mô tả phòng
+                                </FormControl.Label>
+                                <Input placeholder="Mô tả" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Tiện ích</FormControl.Label>
+                                <Input placeholder="Điều hòa, Nóng lạnh (ngăn cách bởi dấu phẩy)" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>
+                                    Đồ dùng cung cấp
+                                </FormControl.Label>
+                                <Input placeholder="Máy sấy, Dép (ngăn cách bởi dấu phẩy)" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Diện tích</FormControl.Label>
+                                <Input placeholder="20" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Đánh giá</FormControl.Label>
+                                <Input placeholder="4" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Giá</FormControl.Label>
+                                <Input placeholder="10000" />
+                            </FormControl>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button.Group space={2}>
+                                <Button
+                                    variant="ghost"
+                                    colorScheme="blueGray"
+                                    onPress={() => {
+                                        setShowModal(false);
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onPress={() => {
+                                        setShowModal(false);
+                                    }}
+                                >
+                                    Save
+                                </Button>
+                            </Button.Group>
+                        </Modal.Footer>
+                    </Modal.Content>
+                </Modal>
+            </Center>
+
+            {/* danh sách nhân viên  */}
+            <View
+                style={{
+                    paddingHorizontal: 20,
+                    paddingBottom: 40,
+                }}
+            >
+                <Text
+                    style={{
+                        fontSize: 25,
+                        paddingVertical: 10,
+                        fontWeight: "bold",
+                    }}
+                >
+                    Danh sách nhân viên
+                </Text>
+
+                <View style={{ display: "flex", gap: 10 }}>
+                    {employeesData.map((employee) => (
+                        <EmployeeCard key={employee.id} {...employee} />
+                    ))}
+                </View>
+
+                {/* thêm nhân viên  */}
+                <AntDesign
+                    name="plussquare"
+                    size={24}
+                    color="#00dc81"
+                    style={{ alignSelf: "center", marginTop: 10, fontSize: 30 }}
+                    onPress={() => setShowEmployeeModal(true)}
+                />
+            </View>
+
+            <Center>
+                <Modal
+                    isOpen={showEmployeeModal}
+                    onClose={() => setShowEmployeeModal(false)}
+                >
+                    <Modal.Content maxWidth="400px">
+                        <Modal.CloseButton />
+                        <Modal.Header>Tạo tài khoản nhân viên</Modal.Header>
+                        <Modal.Body>
+                            <FormControl>
+                                <FormControl.Label>Email</FormControl.Label>
+                                <Input placeholder="example@gmail.com" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Mật khẩu</FormControl.Label>
+                                <Input placeholder="******" type="password" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Họ</FormControl.Label>
+                                <Input placeholder="" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>Tên</FormControl.Label>
+                                <Input placeholder="" />
+                            </FormControl>
+                            <FormControl mt="3">
+                                <FormControl.Label>
+                                    Số điện thoại
+                                </FormControl.Label>
+                                <Input placeholder="" />
+                            </FormControl>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button.Group space={2}>
+                                <Button
+                                    variant="ghost"
+                                    colorScheme="blueGray"
+                                    onPress={() => {
+                                        setShowEmployeeModal(false);
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onPress={() => {
+                                        setShowEmployeeModal(false);
+                                    }}
+                                >
+                                    Save
+                                </Button>
+                            </Button.Group>
+                        </Modal.Footer>
+                    </Modal.Content>
+                </Modal>
+            </Center>
         </ScrollView>
     );
 }

@@ -4,6 +4,9 @@ import BookingContext from "../../contexts/BookingContext";
 
 import { useEffect, useState, useContext } from "react";
 
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+
 const BookingDetail = ({ navigation, route }) => {
     const booking_id = route.params.id;
     const room_image = route.params.image;
@@ -21,7 +24,7 @@ const BookingDetail = ({ navigation, route }) => {
         });
     }, []);
 
-    const date = new Date(bookingDetail?.check_in)
+    const date = new Date(bookingDetail?.check_in);
 
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0"); // January is 0!
@@ -45,18 +48,42 @@ const BookingDetail = ({ navigation, route }) => {
                     />
                 </View>
 
-                <Box style={{ display: "flex", gap: 20, padding: 10 }}>
-                    <View style={{ display: "flex", gap: 8 }}>
-                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                            {room_name}
-                        </Text>
+                <View style={{ display: "flex", gap: 20, padding: 10 }}>
+                    <View style={{ display: "flex", gap: 8, paddingRight: 20 }}>
+                        <View
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                gap: 12,
+                            }}
+                        >
+                            <FontAwesome5
+                                name="hotel"
+                                size={24}
+                                color="#29b6ca"
+                            />
+                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                                {room_name}
+                            </Text>
+                        </View>
 
-                        <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                            {room_address}
-                        </Text>
+                        <View
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                gap: 12,
+                            }}
+                        >
+                            <Entypo name="location" size={24} color="#f6abb6" />
+                            <Text style={{ fontSize: 16, fontWeight: "600" }}>
+                                {room_address}
+                            </Text>
+                        </View>
                     </View>
 
-                    <View style={{ display: "flex", gap: 12 }}>
+                    <View style={{ display: "flex", gap: 12, paddingRight: 60 }}>
                         <View
                             style={{
                                 display: "flex",
@@ -204,7 +231,7 @@ const BookingDetail = ({ navigation, route }) => {
                             </Text>
                         </View>
                     </View>
-                </Box>
+                </View>
             </View>
         </View>
     );

@@ -31,6 +31,8 @@ const Tab = createMaterialBottomTabNavigator();
 import { UserProvider } from "./contexts/UserContext";
 import { BookingProvider } from "./contexts/BookingContext";
 
+import { MaterialIcons } from "@expo/vector-icons";
+
 export default function App() {
     return (
         <UserProvider>
@@ -98,23 +100,7 @@ function MyTabs() {
                 tabBarVisible: route.name !== "Login", // Hide tab bar on Login screen
             })}
         >
-            {/* customer menu  */}
-            <Tab.Screen
-                name="Manager"
-                component={MangerHome}
-                options={{
-                    tabBarLabel: "Quản lý",
-                    tabBarIcon: () => (
-                        <MaterialCommunityIcons
-                            name="account"
-                            color="#000"
-                            size={20}
-                        />
-                    ),
-                }}
-            />
-
-            {/* {!user || user.role === "customer" ? (
+            {!user || user.role === "customer" ? (
                 <Tab.Screen
                     name="Home"
                     component={Home}
@@ -129,7 +115,7 @@ function MyTabs() {
                         ),
                     }}
                 />
-            ) : null} */}
+            ) : null}
 
             {user && user.role === "customer" ? (
                 <Tab.Screen
@@ -173,10 +159,10 @@ function MyTabs() {
                     options={{
                         tabBarLabel: "Quản lý",
                         tabBarIcon: () => (
-                            <MaterialCommunityIcons
-                                name="account"
-                                color="#000"
-                                size={20}
+                            <MaterialIcons
+                                name="manage-accounts"
+                                size={24}
+                                color="black"
                             />
                         ),
                     }}
@@ -200,33 +186,22 @@ function MyTabs() {
                 />
             ) : null}
 
-            <Tab.Screen
-                name="RegisterHotel"
-                component={RegisterHotel}
-                options={{
-                    tabBarLabel: "Đăng ký khách sạn",
-                    tabBarIcon: () => (
-                        <AntDesign name="pluscircle" size={20} color="black" />
-                    ),
-                }}
-            />
-
-            {/* {user && user.role === "manager" ? (
+            {user && user.role === "manager" ? (
                 <Tab.Screen
                     name="RegisterHotel"
                     component={RegisterHotel}
                     options={{
                         tabBarLabel: "Đăng ký khách sạn",
                         tabBarIcon: () => (
-                            <MaterialCommunityIcons
-                                name="hotel"
-                                color="#000"
-                                size={20}
+                            <AntDesign
+                                name="pluscircle"
+                                size={24}
+                                color="black"
                             />
                         ),
                     }}
                 />
-            ) : null} */}
+            ) : null}
 
             {/* general menu  */}
             {!user ? (
