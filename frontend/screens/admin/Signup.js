@@ -45,6 +45,9 @@ const Signup = ({ navigation }) => {
     };
 
     const handleSignup = async () => {
+
+        console.log("Signup pressed");
+
         if (validateForm()) {
             formData = {
                 email: email,
@@ -59,6 +62,7 @@ const Signup = ({ navigation }) => {
                     },
                     body: JSON.stringify(formData),
                 });
+                console.log(response);
                 let responseData = await response.json();
                 if (response.ok) {
                     alert("Đăng ký thành công!");

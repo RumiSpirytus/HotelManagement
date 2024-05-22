@@ -24,11 +24,14 @@ export default function Home({ navigation }) {
     const [availableRooms, setAvailableRooms] = useState([]);
     const [searchRooms, setSearchRooms] = useState(null);
     const [popularHotel, setPopularHotel] = useState([]);
+
+    // search 
     const [handleSearch, setHandleSearch] = useState(false);
     const [formRoomName, setFormRoomName] = useState("");
     const [formHotelAddress, setFormHotelAddress] = useState("");
     const [formHotelName, setFormHotelName] = useState("");
     const [formPrice, setFormPrice] = useState(0);
+
     useEffect(() => {
         const fetchAvailableRooms = async () => {
             try {
@@ -59,25 +62,43 @@ export default function Home({ navigation }) {
     }, []);
 
     useEffect(() => {
-        const fetchSearchRooms = async () => {
+        const search_room = async () => {
+            form_data = {};
+            if (formHotelName) {
+                form_data["hotel_name"] = formHotelName;
+            }
+            if (formHotelAddress) {
+                form_data["address"] = formHotelAddress;
+            }
+            if (formRoomName) {
+                form_data["room_name"] = formRoomName;
+            }
+            if (formPrice) {
+                form_data["max_price"] = formPrice;
+            }
             try {
-                const response = await fetch(
-                    `${BASE_URL}/api/search/room?room_name=${formRoomName}&hotel_address=${formHotelAddress}&hotel_name=${formHotelName}&price=${formPrice}`
-                );
+                const response = await fetch(`${BASE_URL}/api/search/rooms`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ...form_data,
+                    }),
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setSearchRooms(data);
-                } else {
-                    setSearchRooms([]);
+                    console.log(data);
                 }
             } catch (error) {
                 console.error(error);
-                setSearchRooms([]);
             }
-            setHandleSearch(false);
         };
+
         if (handleSearch) {
-            fetchSearchRooms();
+            search_room();
+            setHandleSearch(false);
         }
     }, [handleSearch]);
 
@@ -86,10 +107,7 @@ export default function Home({ navigation }) {
             <StyledView className=" flex flex-col" style={{ paddingTop: 16 }}>
                 {/* tìm kiếm  */}
                 <StyledView className=" p-4 ">
-                    <StyledView
-                        className=" shadow-lg rounded-lg flex flex-col gap-4 mt-1"
-
-                    >
+                    <StyledView className=" shadow-lg rounded-lg flex flex-col gap-4 mt-1">
                         <Box alignItems="center">
                             <Box w="100%">
                                 <FormControl className="flex flex-col gap-2">
@@ -159,7 +177,7 @@ export default function Home({ navigation }) {
                 </StyledView>
 
                 {/* kết quả tìm kiếm  */}
-                <StyledView className="flex flex-col gap-4 p-4">
+                {searchRooms ? <StyledView className="flex flex-col gap-4 p-4">
                     <StyledView>
                         <StyledText className=" text-lg font-semibold text-red-500">
                             Kết quả tìm kiếm
@@ -168,7 +186,7 @@ export default function Home({ navigation }) {
 
                     <ScrollView horizontal>
                         <StyledView className="flex flex-row">
-                            {searchRooms ? (
+                            {searchRooms && searchRooms.length > 0 ? (
                                 searchRooms.map((room) => (
                                     <AvailableRoom
                                         key={room.id}
@@ -185,7 +203,7 @@ export default function Home({ navigation }) {
                             )}
                         </StyledView>
                     </ScrollView>
-                </StyledView>
+                </StyledView> : null}
 
                 {/* Phòng còn trống */}
                 <StyledView className="flex flex-col gap-4 p-4">
@@ -221,7 +239,13 @@ export default function Home({ navigation }) {
                     </StyledView>
 
                     <ScrollView horizontal>
-                        <StyledView style={{display: 'flex', flexDirection: 'row', gap: 12}}>
+                        <StyledView
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 12,
+                            }}
+                        >
                             {popularHotel.map((hotel) => (
                                 <PopularHotel
                                     key={hotel.id}

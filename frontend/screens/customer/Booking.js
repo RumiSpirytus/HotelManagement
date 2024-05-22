@@ -18,7 +18,7 @@ const Booking = ({ navigation, route }) => {
     }, [count]);
 
     return (
-        <View style={{ paddingTop: 40 }}>
+        <View style={{ paddingTop: 40, paddingBottom: 120 }}>
             <View
                 style={{
                     display: "flex",
@@ -31,7 +31,7 @@ const Booking = ({ navigation, route }) => {
                     <Text className=" text-lg font-semibold">Phòng đã đặt</Text>
                 </View>
 
-                {rooms.length > 0 ? (
+                {rooms && rooms.length > 0 ? (
                     <ScrollView style={{display: 'flex', width: '100%'}}>
                         <View style={{display: 'flex', flexDirection: 'column', gap: 16, width: '100%'}}>
                             {rooms.map((room, index) => (
@@ -49,7 +49,7 @@ const Booking = ({ navigation, route }) => {
                         </View>
                     </ScrollView>
                 ) : (
-                    <Text>Bạn chưa đặt phòng nào</Text>
+                    <Text style={{color: 'red'}}>Bạn chưa đặt phòng nào</Text>
                 )}
             </View>
         </View>

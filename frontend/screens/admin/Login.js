@@ -41,6 +41,9 @@ const Login = ({ navigation }) => {
     };
 
     const handleLogin = async () => {
+
+        console.log('press');
+
         if (validateForm()) {
             // handle login
             formData = {

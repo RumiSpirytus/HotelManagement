@@ -47,3 +47,11 @@ class BookingController:
         if booking is None:
             raise HTTPException(status_code=404, detail="Booking not found")
         return booking.to_dict()
+    
+    def deleteBooking(id: uuid.UUID, db: Session = Depends(get_db)):
+        booking = db.query(Booking).filter(Booking.id == id).first()
+        if booking is None:
+            raise HTTPException(status_code=404, detail="Booking not found")
+        db.delete(booking)
+        db.commit()
+        return JSONResponse(content={"message": "Booking deleted successfully"}, status_code=200)

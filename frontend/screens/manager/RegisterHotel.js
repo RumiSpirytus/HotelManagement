@@ -34,6 +34,14 @@ export default function RegisterHotel({ navigation }) {
     const [uploading, setUploading] = useState(false);
     const [images, setImages] = useState([]);
 
+    const [formData, setData] = useState({
+        name: "",
+        description: "",
+        address: "",
+        rating: 0,
+        logo: "",
+    });
+
     // Load images on startup
     useEffect(() => {
         loadImages();

@@ -32,7 +32,7 @@ import { BASE_URL } from "../../utils";
 
 const RoomDetail = ({ navigation, route }) => {
     const { user, count, increaseCount } = React.useContext(UserContext);
-    const {getBooking} = React.useContext(BookingContext);
+    const { getBooking } = React.useContext(BookingContext);
     const room_id = route.params.id;
 
     const [isBooked, setIsBooked] = useState(false);
@@ -49,7 +49,7 @@ const RoomDetail = ({ navigation, route }) => {
         });
     }, [count]);
 
-    let customer_id
+    let customer_id;
     if (user) {
         customer_id = user.role_id;
     }
@@ -58,9 +58,7 @@ const RoomDetail = ({ navigation, route }) => {
     useEffect(() => {
         const fetchRoomDetail = async () => {
             try {
-                const res = await fetch(
-                    `${BASE_URL}/api/room/${room_id}`
-                );
+                const res = await fetch(`${BASE_URL}/api/room/${room_id}`);
                 const data = await res.json();
                 setRoom(data);
             } catch (err) {
@@ -161,7 +159,6 @@ const RoomDetail = ({ navigation, route }) => {
 
     async function handleSubmit() {
         if (validForm()) {
-
             formData = {
                 customer_id: customer_id,
                 room_id: room_id,
@@ -170,21 +167,29 @@ const RoomDetail = ({ navigation, route }) => {
                 customer_name: formName,
                 customer_email: formEmail,
                 customer_phone: formPhone,
+                created_at: new Date(),
+                updated_at: new Date(),
             };
 
-            const response = await fetch(`${BASE_URL}/api/booking`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
+            console.log(formData);
 
-            if (response.ok) {
-                alert("Đặt phòng thành công");
-                increaseCount();
-            } else {
-                alert("Đặt phòng thất bại");
+            try {
+                const response = await fetch(`${BASE_URL}/api/booking/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    alert("Đặt phòng thành công");
+                    increaseCount();
+                } else {
+                    alert("Đặt phòng thất bại");
+                }
+            } catch (err) {
+                console.log(err);
             }
         }
     }
@@ -408,18 +413,31 @@ const RoomDetail = ({ navigation, route }) => {
                 </View>
 
                 <Center style={{ marginTop: 10 }}>
-                    {!isBooked? <Button
-                        onPress={() => {
-                            if (user) {
-                                setShowModal(true);
-                            } else {
-                                navigation.navigate("Login");
-                            }
-                        }}
-                        style={{ width: 250, marginBottom: 40 }}
-                    >
-                        Đặt phòng ngay
-                    </Button> : <Text style={{fontSize: 20, fontWeight: 'bold', color: 'red', marginBottom: 40}}>Bạn đã đặt phòng này</Text>}
+                    {!isBooked ? (
+                        <Button
+                            onPress={() => {
+                                if (user) {
+                                    setShowModal(true);
+                                } else {
+                                    navigation.navigate("Login");
+                                }
+                            }}
+                            style={{ width: 250, marginBottom: 40 }}
+                        >
+                            Đặt phòng ngay
+                        </Button>
+                    ) : (
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                fontWeight: "bold",
+                                color: "red",
+                                marginBottom: 40,
+                            }}
+                        >
+                            Bạn đã đặt phòng này
+                        </Text>
+                    )}
                     <Modal
                         isOpen={showModal}
                         onClose={() => setShowModal(false)}
@@ -571,7 +589,7 @@ const RoomDetail = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     card: {
         flex: 1,
-        paddingBottom: 10
+        paddingBottom: 10,
     },
     image: {
         width: "100%",

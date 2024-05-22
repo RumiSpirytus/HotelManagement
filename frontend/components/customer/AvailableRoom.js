@@ -6,9 +6,6 @@ import { Image } from "native-base";
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
 import { TouchableOpacity } from "react-native";
 
 export default function AvailableRoom({
