@@ -18,85 +18,12 @@ import { AntDesign } from "@expo/vector-icons";
 import HotelCard from "../../components/manager/HotelCard";
 import EmployeeCard from "../../components/manager/EmployeeCard";
 
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 
-const roomsData = [
-    {
-        id: 1,
-        name: "Phòng VIP",
-        price: 1000000,
-        logo: "https://www.newworldhotels.com/wp-content/uploads/2014/05/Mobile-NWHBR-Exterior.jpg",
-        images: [
-            "https://www.newworldhotels.com/wp-content/uploads/2014/05/Mobile-NWHBR-Exterior.jpg",
-            "https://www.newworldhotels.com/wp-content/uploads/2014/05/Mobile-NWHBR-Exterior.jpg",
-            "https://www.newworldhotels.com/wp-content/uploads/2014/05/Mobile-NWHBR-Exterior.jpg",
-        ],
-        room_detail: "Mô tả phòng 1",
-        room_conveninet: [
-            "Tiện ích phòng 1",
-            "Tiện ích phòng 1",
-            "Tiện ích phòng 1",
-        ],
-        room_supplies: [
-            "Vật dụng phòng 1",
-            "Vật dụng phòng 1",
-            "Vật dụng phòng 1",
-        ],
-        room_size: 20,
-        is_hired: true,
-        rating: 4.2,
-    },
-    {
-        id: 2,
-        name: "Phòng thường",
-        price: 2000000,
-        logo: "https://truongcaodangnauan.edu.vn/test_disk/photos/shares/hotel-la-gi.jpg",
-        images: [
-            "https://truongcaodangnauan.edu.vn/test_disk/photos/shares/hotel-la-gi.jpg",
-            "https://truongcaodangnauan.edu.vn/test_disk/photos/shares/hotel-la-gi.jpg",
-            "https://truongcaodangnauan.edu.vn/test_disk/photos/shares/hotel-la-gi.jpg",
-        ],
-        room_detail: "Mô tả phòng 2",
-        room_conveninet: [
-            "Tiện ích phòng 2",
-            "Tiện ích phòng 2",
-            "Tiện ích phòng 2",
-        ],
-        room_supplies: [
-            "Vật dụng phòng 2",
-            "Vật dụng phòng 2",
-            "Vật dụng phòng 2",
-        ],
-        room_size: 25,
-        is_hired: false,
-        rating: 5,
-    },
-    {
-        id: 3,
-        name: "Phòng VIP",
-        price: 3000000,
-        logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7aXQLauaQQ3wCLhfiVItL8rNu8xrVveCAHAQPCbThRw&s",
-        images: [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7aXQLauaQQ3wCLhfiVItL8rNu8xrVveCAHAQPCbThRw&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7aXQLauaQQ3wCLhfiVItL8rNu8xrVveCAHAQPCbThRw&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7aXQLauaQQ3wCLhfiVItL8rNu8xrVveCAHAQPCbThRw&s",
-        ],
-        room_detail: "Mô tả phòng 3",
-        room_conveninet: [
-            "Tiện ích phòng 3",
-            "Tiện ích phòng 3",
-            "Tiện ích phòng 3",
-        ],
-        room_supplies: [
-            "Vật dụng phòng 3",
-            "Vật dụng phòng 3",
-            "Vật dụng phòng 3",
-        ],
-        room_size: 30,
-        is_hired: true,
-        rating: 3,
-    },
-];
+import { BASE_URL } from "../../utils";
+
+import UserContext from "../../contexts/UserContext";
+import ManagerContext from "../../contexts/ManagerContext";
 
 const employeesData = [
     {
@@ -126,8 +53,31 @@ export default function ManagerHotel({ route, navigation }) {
     const address = route.params.address;
     const rating = route.params.rating;
 
+    console.log("Hotel ID:", hotel_id);
+
+    const { count } = useContext(ManagerContext);
+
+    const [rooms, setRooms] = useState([]);
+
     const [showModal, setShowModal] = useState(false);
     const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+
+    useEffect(() => {
+        const getRooms = async () => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/api/room/hotel/${hotel_id}/`
+                );
+                const data = await response.json();
+                setRooms(data);
+                // console.log(data);
+            } catch (error) {
+                console.error("Failed to get rooms:", error);
+            }
+        };
+
+        getRooms();
+    }, [count]);
 
     return (
         <ScrollView
@@ -208,11 +158,23 @@ export default function ManagerHotel({ route, navigation }) {
                     Danh sách phòng
                 </Text>
 
-                <View style={{ display: "flex", gap: 10 }}>
-                    {roomsData.map((room) => (
-                        <HotelCard key={room.id} {...room} />
-                    ))}
-                </View>
+                {rooms ? (
+                    <View style={{ display: "flex", gap: 10 }}>
+                        {rooms.map((room) => (
+                            <HotelCard
+                                key={room.id}
+                                logo={room.logo}
+                                name={room.name}
+                                rating={room.rating}
+                                price={room.price}
+                                is_hired={room.is_hired}
+                                id={room.id}
+                                room_size={room.room_size}
+                                navigation={navigation}
+                            />
+                        ))}
+                    </View>
+                ) : null}
 
                 {/* thêm phòng  */}
                 <AntDesign

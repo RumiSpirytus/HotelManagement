@@ -75,3 +75,16 @@ class HotelController:
         db.commit()
         return JSONResponse(content={"message": "Hotel deleted successfully"}, status_code=200)
     
+    def getHotelByManagerId(manager_id: uuid.UUID, db: Session = Depends(get_db)):
+        hotels = db.query(Hotel).filter(Hotel.manager_id == manager_id).all()
+        data = []
+        for hotel in hotels:
+            data.append({
+                "id": hotel.id,
+                "name": hotel.name,
+                "address": hotel.address,
+                "description": hotel.description,
+                "logo": hotel.logo,
+                "rating": hotel.rating,
+            })
+        return data

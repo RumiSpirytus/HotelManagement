@@ -18,6 +18,7 @@ import MangerHome from "./screens/manager/ManagerHome";
 import RegisterHotel from "./screens/manager/RegisterHotel";
 import ManagerProfile from "./screens/manager/ManagerProfile";
 import ManagerHotel from "./screens/manager/ManagerHotel";
+import ManagerRoom from "./screens/manager/ManagerRoom";
 
 import { NativeBaseProvider, View } from "native-base";
 
@@ -30,60 +31,68 @@ const Tab = createMaterialBottomTabNavigator();
 
 import { UserProvider } from "./contexts/UserContext";
 import { BookingProvider } from "./contexts/BookingContext";
+import { ManagerProvider } from "./contexts/ManagerContext";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
 export default function App() {
     return (
         <UserProvider>
-            <BookingProvider>
-                <NativeBaseProvider>
-                    <NavigationContainer>
-                        <Stack.Navigator initialRouteName="Trang chủ">
-                            {/* <Stack.Screen
+            <ManagerProvider>
+                <BookingProvider>
+                    <NativeBaseProvider>
+                        <NavigationContainer>
+                            <Stack.Navigator initialRouteName="Trang chủ">
+                                {/* <Stack.Screen
                         name="Login"
                         component={Login}
                         options={{ headerShown: false}}
                     /> */}
-                            <Stack.Screen
-                                name="Signup"
-                                component={Signup}
-                                options={{ headerShown: false }}
-                            />
-                            <Stack.Screen
-                                name="Trang chủ"
-                                component={MyTabs}
-                                options={{ headerShown: false }}
-                            />
-                            <Stack.Screen
-                                name="Home"
-                                component={Home}
-                                options={{ headerShown: false }}
-                            />
-                            <Stack.Screen
-                                name="RoomDetail"
-                                component={RoomDetail}
-                                options={{ title: "Xem phòng" }}
-                            />
-                            <Stack.Screen
-                                name="HotelDetail"
-                                component={HotelDetail}
-                                options={{ title: "Xem khách sạn" }}
-                            />
-                            <Stack.Screen
-                                name="BookingDetail"
-                                component={BookingDetail}
-                                options={{ title: "Xem đơn đặt phòng" }}
-                            />
-                            <Stack.Screen
-                                name="ManagerHotel"
-                                component={ManagerHotel}
-                                options={{ title: "Quản lý khách sạn" }}
-                            />
-                        </Stack.Navigator>
-                    </NavigationContainer>
-                </NativeBaseProvider>
-            </BookingProvider>
+                                <Stack.Screen
+                                    name="Signup"
+                                    component={Signup}
+                                    options={{ headerShown: false }}
+                                />
+                                <Stack.Screen
+                                    name="Trang chủ"
+                                    component={MyTabs}
+                                    options={{ headerShown: false }}
+                                />
+                                <Stack.Screen
+                                    name="Home"
+                                    component={Home}
+                                    options={{ headerShown: false }}
+                                />
+                                <Stack.Screen
+                                    name="RoomDetail"
+                                    component={RoomDetail}
+                                    options={{ title: "Xem phòng" }}
+                                />
+                                <Stack.Screen
+                                    name="HotelDetail"
+                                    component={HotelDetail}
+                                    options={{ title: "Xem khách sạn" }}
+                                />
+                                <Stack.Screen
+                                    name="BookingDetail"
+                                    component={BookingDetail}
+                                    options={{ title: "Xem đơn đặt phòng" }}
+                                />
+                                <Stack.Screen
+                                    name="ManagerHotel"
+                                    component={ManagerHotel}
+                                    options={{ title: "Quản lý khách sạn" }}
+                                />
+                                <Stack.Screen
+                                    name="ManagerRoom"
+                                    component={ManagerRoom}
+                                    options={{ title: "Quản lý phòng" }}
+                                />
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                    </NativeBaseProvider>
+                </BookingProvider>
+            </ManagerProvider>
         </UserProvider>
     );
 }

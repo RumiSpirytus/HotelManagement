@@ -18,7 +18,11 @@ async def get_popular_hotel(page: int = 1, size: int = 10, db: Session = Depends
 async def get_hotel_by_id(id: str, db: Session = Depends(get_db)):
     return HotelController.getHotelById(id, db)
 
-@router.post("/")
+@router.get('/manager/{manager_id}')
+def get_hotel_by_manager_id(manager_id: str, db: Session = Depends(get_db)):
+    return HotelController.getHotelByManagerId(manager_id, db)
+
+@router.post("")
 async def create_hotel(hotel: HotelSchema, db: Session = Depends(get_db)):
     return HotelController.createHotel(hotel, db)
 

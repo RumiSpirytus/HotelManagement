@@ -4,33 +4,37 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const data = [
-    {
-        name: "Khách sạn 1",
-        address: "123 Đường ABC",
-        description: "Mô tả khách sạn 1",
-        logo: "https://www.newworldhotels.com/wp-content/uploads/2014/05/Mobile-NWHBR-Exterior.jpg",
-        rating: 4.2,
-    },
-    {
-        name: "Khách sạn 2",
-        address: "123 Đường ABC",
-        description: "Mô tả khách sạn 2",
-        logo: "https://truongcaodangnauan.edu.vn/test_disk/photos/shares/hotel-la-gi.jpg",
-        rating: 5,
-    },
-    {
-        name: "Khách sạn 3",
-        address: "123 Đường ABC",
-        description: "Mô tả khách sạn 3",
-        logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7aXQLauaQQ3wCLhfiVItL8rNu8xrVveCAHAQPCbThRw&s",
-        rating: 3,
-    },
-];
-
 import MyHotel from "../../components/manager/MyHotel";
+import { useEffect, useContext, useState } from "react";
+
+import UserContext from "../../contexts/UserContext";
+import ManagerContext from "../../contexts/ManagerContext";
+
+import { BASE_URL } from "../../utils";
 
 export default function MangerHome({ navigation }) {
+    const { user } = useContext(UserContext);
+    const {count} = useContext(ManagerContext);
+
+    const [hotels, setHotels] = useState([]);
+
+    useEffect(() => {
+        const getHotels = async () => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/api/hotel/manager/${user?.role_id}`
+                );
+                const data = await response.json();
+                setHotels(data);
+                console.log("Hotels:", data);
+            } catch (error) {
+                console.error("Failed to get hotels:", error);
+            }
+        }
+
+        getHotels();
+    }, [count]);
+
     return (
         <ScrollView
             style={{
@@ -55,10 +59,11 @@ export default function MangerHome({ navigation }) {
                 <FlatList
                     gap={10}
                     horizontal
-                    data={data}
+                    data={hotels}
                     renderItem={(item) => {
                         return (
                             <MyHotel
+                                id={item.item.id}
                                 name={item.item.name}
                                 address={item.item.address}
                                 description={item.item.description}

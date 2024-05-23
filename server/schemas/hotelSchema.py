@@ -10,7 +10,7 @@ class HotelSchema(BaseModel):
     logo: str
     images: list
     address: str
-    rating: float
+    rating: Optional[float] = 5
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 

@@ -106,7 +106,7 @@ const BookingDetail = ({ navigation, route }) => {
                     </AlertDialog.Body>
                     <AlertDialog.Footer>
                         <Button.Group space={2}>
-                            <Button variant="unstyled" colorScheme="coolGray" onPress={onClose}>
+                            <Button variant="unstyled" colorScheme="coolGray" onPress={() => setIsOpen(false)}>
                                 Hủy
                             </Button>
                             <Button colorScheme="danger" onPress={onClose}>
