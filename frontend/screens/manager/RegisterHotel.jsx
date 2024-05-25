@@ -26,7 +26,7 @@ export default function RegisterHotel({ navigation }) {
         address: "",
         rating: 0,
         logo: "",
-        images: [],
+        images: "",
     });
 
     const [errors, setErrors] = useState({

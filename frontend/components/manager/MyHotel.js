@@ -37,7 +37,7 @@ export default function MyHotel({
             <Box alignItems="center">
                 <Box
                     maxWidth={300}
-                    minHeight={300}
+                    minHeight={350}
                     rounded="lg"
                     overflow="hidden"
                     borderColor="coolGray.400"

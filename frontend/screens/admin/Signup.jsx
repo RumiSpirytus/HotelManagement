@@ -11,80 +11,70 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors.js";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-import Button from "../../components/Button.js";
-
-import UserContext from "../../contexts/UserContext.js";
+import Button from "../../components/Button.jsx";
 
 import { BASE_URL } from "../../utils.js";
 
-const Login = ({ navigation }) => {
+const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
     const [isPasswordShown, setIsPasswordShown] = useState(true);
     const [isChecked, setIsChecked] = useState(false);
-
-    const { loginUser } = React.useContext(UserContext);
+    const [isManager, setIsManager] = useState(false);
 
     const validateForm = () => {
         let isValid = true;
         let emailRegEx = /\S+@\S+\.\S+/;
 
         if (!emailRegEx.test(email)) {
-            alert("Vui lòng nhập email hợp lệ.");
+            alert("Vui lòng nhập địa chỉ email hợp lệ.");
+            isValid = false;
+        } else if (phoneNumber.length < 10) {
+            alert("Số điện thoại phải có ít nhất 10 số.");
             isValid = false;
         } else if (password.length < 6) {
-            alert("Mật khẩu phải chứa ít nhất 6 ký tự.");
+            alert("Mật khẩu phải có ít nhất 6 ký tự.");
+            isValid = false;
+        } else if (!isChecked) {
+            alert("Vui lòng đồng ý với các điều khoản.");
             isValid = false;
         }
 
         return isValid;
     };
 
-    const handleLogin = async () => {
+    const handleSignup = async () => {
 
-        console.log('press');
+        console.log("Signup pressed");
 
         if (validateForm()) {
-            // handle login
             formData = {
                 email: email,
                 password: password,
+                role: isManager ? "manager" : "customer",
             };
-
             try {
-                const response = await fetch(
-                    `${BASE_URL}/api/user/login`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(formData),
-                    }
-                );
-
+                const response = await fetch(`${BASE_URL}/api/user/register`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+                console.log(response);
                 let responseData = await response.json();
-
                 if (response.ok) {
-                    alert("Đăng nhập thành công.");
-
-                    // Save user data to context
-                    loginUser(responseData);
-
-                    // Navigate to Home screen
-                    if (responseData.role == "customer") {
-                        navigation.navigate("Home");
-                    }
+                    alert("Đăng ký thành công!");
+                    navigation.navigate("Login");
                 } else {
-                    if (responseData.detail == "Incorrect email") {
-                        alert("Email không tồn tại");
-                    } else if (responseData.detail == "Incorrect password") {
-                        alert("Mật khẩu không chính xác!");
+                    if (responseData.detail == "User already exists") {
+                        throw new Error("Email đã tồn tại!");
                     }
                 }
             } catch (error) {
                 console.log(error);
-                alert(error.message || "Đã có lỗi xảy ra. Vui lòng thử lại.");
+                alert(error.message || "Đã có lỗi xảy ra!");
             }
         }
     };
@@ -101,7 +91,7 @@ const Login = ({ navigation }) => {
                             color: COLORS.black,
                         }}
                     >
-                        Chào mừng ! 👋
+                        Đăng ký
                     </Text>
                 </View>
 
@@ -135,6 +125,68 @@ const Login = ({ navigation }) => {
                             style={{ width: "100%" }}
                             onChangeText={setEmail}
                             value={email}
+                        />
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            marginTop: 10,
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Checkbox
+                            style={{ marginRight: 8 }}
+                            value={isManager}
+                            onValueChange={setIsManager}
+                            color={isManager ? COLORS.primary : undefined}
+                        />
+
+                        <Text style={{}}>Bạn là chủ khách sạn?</Text>
+                    </View>
+                </View>
+
+                <View style={{ marginBottom: 12 }}>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 400,
+                            marginVertical: 8,
+                        }}
+                    >
+                        Số điện thoại
+                    </Text>
+
+                    <View
+                        style={{
+                            width: "100%",
+                            height: 48,
+                            borderColor: COLORS.black,
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            alignItems: "center",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingLeft: 22,
+                        }}
+                    >
+                        <TextInput
+                            placeholder="+84"
+                            placeholderTextColor={COLORS.black}
+                            style={{
+                                width: "12%",
+                                borderRightWidth: 1,
+                                borderLeftColor: COLORS.grey,
+                                height: "100%",
+                            }}
+                        />
+
+                        <TextInput
+                            placeholder="Nhập số điện thoại của bạn"
+                            placeholderTextColor={COLORS.black}
+                            style={{ width: "80%" }}
+                            onChangeText={setPhoneNumber}
+                            value={phoneNumber}
                         />
                     </View>
                 </View>
@@ -199,6 +251,7 @@ const Login = ({ navigation }) => {
                     style={{
                         flexDirection: "row",
                         marginVertical: 6,
+                        alignItems: "center",
                     }}
                 >
                     <Checkbox
@@ -208,14 +261,16 @@ const Login = ({ navigation }) => {
                         color={isChecked ? COLORS.primary : undefined}
                     />
 
-                    <Text>Nhớ mật khẩu</Text>
+                    <Text style={{ fontStyle: "italic" }}>
+                        Tôi đồng ý với các điều khoản
+                    </Text>
                 </View>
 
                 <Button
-                    title="Đăng nhập"
+                    title="Đăng ký"
                     filled
                     style={{ marginTop: 18, marginBottom: 4 }}
-                    onPress={handleLogin}
+                    onPress={handleSignup}
                 />
 
                 <View
@@ -233,7 +288,7 @@ const Login = ({ navigation }) => {
                             marginHorizontal: 10,
                         }}
                     />
-                    <Text style={{ fontSize: 14 }}>Hoặc đăng nhập với</Text>
+                    <Text style={{ fontSize: 14 }}>Hoặc đăng ký với</Text>
                     <View
                         style={{
                             flex: 1,
@@ -313,9 +368,9 @@ const Login = ({ navigation }) => {
                     }}
                 >
                     <Text style={{ fontSize: 16, color: COLORS.black }}>
-                        Bạn chưa có tài khoản?{" "}
+                        Bạn đã có tài khoản?
                     </Text>
-                    <Pressable onPress={() => navigation.navigate("Signup")}>
+                    <Pressable onPress={() => navigation.navigate("Login")}>
                         <Text
                             style={{
                                 fontSize: 16,
@@ -324,7 +379,7 @@ const Login = ({ navigation }) => {
                                 marginLeft: 6,
                             }}
                         >
-                            Đăng ký
+                            Đăng nhập
                         </Text>
                     </Pressable>
                 </View>
@@ -333,4 +388,4 @@ const Login = ({ navigation }) => {
     );
 };
 
-export default Login;
+export default Signup;

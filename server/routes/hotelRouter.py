@@ -2,11 +2,11 @@ from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from controllers.hotelController import HotelController
 from database import get_db
-from schemas.hotelSchema import HotelSchema
+from schemas.hotelSchema import HotelSchema, HotelUpdateSchema
 
 router = APIRouter(prefix="/hotel", tags=["Hotel"], responses={404: {"description": "Not found"}})
 
-@router.get("/")
+@router.get("")
 async def get_all_hotels(page: int = 1, size: int = 10, db: Session = Depends(get_db) ):
     return HotelController.getAllHotels(page, size, db)
 
@@ -27,7 +27,7 @@ async def create_hotel(hotel: HotelSchema, db: Session = Depends(get_db)):
     return HotelController.createHotel(hotel, db)
 
 @router.put("/{id}")
-async def update_hotel(id: str, hotel: HotelSchema, db: Session = Depends(get_db)):
+async def update_hotel(id: str, hotel: HotelUpdateSchema, db: Session = Depends(get_db)):
     return HotelController.updateHotel(id, hotel, db)
 
 @router.delete("/{id}")

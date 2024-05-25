@@ -7,7 +7,7 @@ import uuid
 
 router = APIRouter(prefix="/room", tags=["Room"], responses={404: {"description": "Not found"}})
 
-@router.get("/")
+@router.get("")
 async def get_all_rooms(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
     rooms = RoomController.getAllRooms(page, size, db)
     if rooms is None:
@@ -42,7 +42,7 @@ async def update_room(id: uuid.UUID, room: RoomUpdateSchema, db: Session = Depen
         raise HTTPException(status_code=404, detail="Room not found")
     return RoomController.updateRoom(id, room, db)
 
-@router.post("/")
+@router.post("")
 async def create_room(room: RoomSchema, db: Session = Depends(get_db)):
     return RoomController.createRoom(room, db)
 

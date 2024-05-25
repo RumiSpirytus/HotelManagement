@@ -174,7 +174,7 @@ const RoomDetail = ({ navigation, route }) => {
             console.log(formData);
 
             try {
-                const response = await fetch(`${BASE_URL}/api/booking/`, {
+                const response = await fetch(`${BASE_URL}/api/booking`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

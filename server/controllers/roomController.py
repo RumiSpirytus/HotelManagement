@@ -54,7 +54,7 @@ class RoomController:
         return { "id": room[0], "hotel_id": room[1], "address": room[2], "logo": room[3], "name": room[4], "rating": room[5], "price": room[6], "room_detail": room[7], "room_convenient": room[8], "room_supplies": room[9], "images": room[10], "room_size": room[11], "is_hired": room[12]}
     
     def updateRoom(id: uuid.UUID, room: RoomUpdateSchema, db: Session = Depends(get_db)):
-        db_room = db.query(Room).filter(Room.id == id)
+        db_room = db.query(Room).filter(Room.id == id).first()
         if room.name is not None:
             db_room.name = room.name
         if room.logo is not None:
@@ -80,7 +80,7 @@ class RoomController:
         
         db_room.updated_at = datetime.now(utc)      
         db.commit()
-        return { "message": "Room updated successfully"}
+        return {"message": "Room updated successfully"}
     
     def deleteRoom(id: uuid.UUID, db: Session = Depends(get_db)):
         db.query(Room).filter(Room.id == id).delete()

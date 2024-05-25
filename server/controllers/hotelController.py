@@ -53,7 +53,7 @@ class HotelController:
         return JSONResponse(content=db_hotel.to_dict(), status_code=201)
     
     def updateHotel(id: uuid.UUID, hotel: HotelUpdateSchema, db: Session = Depends(get_db)):
-        db_hotel = db.query(Hotel).filter(Hotel.id == id)
+        db_hotel = db.query(Hotel).filter(Hotel.id == id).first()
         if hotel.name is not None:
             db_hotel.name = hotel.name
         if hotel.description is not None:
