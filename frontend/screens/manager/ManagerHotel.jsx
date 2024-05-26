@@ -11,6 +11,8 @@ import {
     Checkbox,
 } from "native-base";
 
+import { TouchableOpacity } from "react-native";
+
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -23,7 +25,7 @@ import { useState, useContext, useEffect } from "react";
 import { BASE_URL } from "../../utils";
 
 import ManagerContext from "../../contexts/ManagerContext";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import UserContext from "../../contexts/UserContext";
 
 const employeesData = [
     {
@@ -61,8 +63,10 @@ export default function ManagerHotel({ route, navigation }) {
     });
 
     const { count, increaseCount } = useContext(ManagerContext);
+    const { user } = useContext(UserContext);
 
     const [rooms, setRooms] = useState([]);
+    const [employees, setEmployees] = useState([]);
 
     const [showModal, setShowModal] = useState(false);
     const [showEmployeeModal, setShowEmployeeModal] = useState(false);
@@ -78,6 +82,14 @@ export default function ManagerHotel({ route, navigation }) {
         room_size: "",
         rating: "",
         price: "",
+    });
+    const [formEmployeeError, setFormEmployeeError] = useState(false);
+    const [formEmployeeData, setFormEmployeeData] = useState({
+        email: "",
+        password: "",
+        first_name: "",
+        last_name: "",
+        phone_num: "",
     });
 
     useEffect(() => {
@@ -137,8 +149,32 @@ export default function ManagerHotel({ route, navigation }) {
         return errors;
     };
 
+    const validateFormEmployee = (values) => {
+        let errors = {};
+
+        if (!values.email) {
+            errors.email = "Email không được để trống";
+        }
+
+        if (!values.password) {
+            errors.password = "Mật khẩu không được để trống";
+        }
+
+        if (!values.first_name) {
+            errors.first_name = "Họ không được để trống";
+        }
+
+        if (!values.last_name) {
+            errors.last_name = "Tên không được để trống";
+        }
+        if (!values.phone_num) {
+            errors.phone_num = "Số điện thoại không được để trống";
+        }
+
+        return errors;
+    };
+
     const handleSubmitRoomForm = async () => {
-        console.log("Form data:", formRoomData);
 
         const errors = validateRoomForm(formRoomData);
 
@@ -164,8 +200,6 @@ export default function ManagerHotel({ route, navigation }) {
                 is_hired: false,
             };
 
-            console.log("Form data:", formData);
-
             try {
                 const response = await fetch(`${BASE_URL}/api/room`, {
                     method: "POST",
@@ -179,6 +213,13 @@ export default function ManagerHotel({ route, navigation }) {
                     increaseCount();
                     alert("Tạo phòng thành công");
                     setShowModal(false);
+                } else {
+                    const data = await response.json();
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert("Tạo phòng thất bại, vui lòng thử lại");
+                    }
                 }
             } catch (error) {
                 console.error("Failed to create room:", error);
@@ -192,6 +233,60 @@ export default function ManagerHotel({ route, navigation }) {
         }
     };
 
+    const handleSubmitEmployeeForm = async () => {
+
+        const errors = validateFormEmployee(formEmployeeData);
+
+        if (Object.keys(errors).length === 0) {
+            // No errors, submit the form
+            formData = {
+                email: formEmployeeData.email,
+                password: formEmployeeData.password,
+                first_name: formEmployeeData.first_name,
+                last_name: formEmployeeData.last_name,
+                phone_num: formEmployeeData.phone_num,
+                hotel_id: hotel_id,
+                manager_id: user?.role_id,
+                role: "employee",
+            };
+
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/employee`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    alert("Tạo nhân viên thành công");
+                    setShowEmployeeModal(false);
+                    setFormEmployeeData({
+                        email: "",
+                        password: "",
+                        first_name: "",
+                        last_name: "",
+                        phone_num: "",
+                    });
+                    increaseCount();
+                } else {
+                    const data = await response.json();
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Failed to create employee:", error);
+                alert("Tạo nhân viên thất bại, vui lòng thử lại");
+                setShowEmployeeModal(false);
+            }
+        } else {
+            // There are errors, update the state
+            console.log("Errors:", errors);
+            setFormEmployeeError(errors);
+        }
+    };
+
     useEffect(() => {
         const getRooms = async () => {
             try {
@@ -200,21 +295,35 @@ export default function ManagerHotel({ route, navigation }) {
                 );
                 const data = await response.json();
                 setRooms(data);
-                // console.log(data);
             } catch (error) {
                 console.error("Failed to get rooms:", error);
             }
         };
 
+        const getEmployees = async () => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/api/employee/${hotel_id}`
+                );
+                const data = await response.json();
+                setEmployees(data);
+            } catch (error) {
+                console.error("Failed to get employees:", error);
+            }
+        };
+
         getRooms();
+        getEmployees();
     }, [count]);
 
     const [isEditHotel, setIsEditHotel] = useState(false);
 
-    const [editHotelName, setEditHotelName] = useState(hotel.name);
-    const [editHotelAddress, setEditHotelAddress] = useState(hotel.address);
-    const [editHotelRating, setEditHotelRating] = useState(hotel.rating);
-    const [editHotelLogo, setEditHotelLogo] = useState(hotel.logo);
+    const [editHotelName, setEditHotelName] = useState(hotel ? hotel.name : '');
+    const [editHotelAddress, setEditHotelAddress] = useState(hotel ? hotel.address : '');
+    const [editHotelRating, setEditHotelRating] = useState(hotel ? hotel.rating : '');
+    const [editHotelLogo, setEditHotelLogo] = useState(hotel ? hotel.logo : '');
+
+    const [isDeleteHotel, setIsDeleteHotel] = useState(false);
 
     return (
         <ScrollView
@@ -261,7 +370,7 @@ export default function ManagerHotel({ route, navigation }) {
                 >
                     <FontAwesome5 name="hotel" size={24} color="#70bc59" />
                     <Text style={{ fontSize: 16, fontWeight: "700" }}>
-                        {hotel.name}
+                        {hotel?.name}
                     </Text>
                 </View>
                 <View
@@ -280,7 +389,7 @@ export default function ManagerHotel({ route, navigation }) {
                             paddingRight: 20,
                         }}
                     >
-                        {hotel.address}
+                        {hotel?.address}
                     </Text>
                 </View>
                 <View
@@ -293,7 +402,7 @@ export default function ManagerHotel({ route, navigation }) {
                 >
                     <AntDesign name="star" size={24} color="#f7d003" />
                     <Text style={{ fontSize: 16, fontWeight: "700" }}>
-                        {hotel.rating}
+                        {hotel?.rating}
                     </Text>
                 </View>
             </View>
@@ -574,11 +683,15 @@ export default function ManagerHotel({ route, navigation }) {
                     Danh sách nhân viên
                 </Text>
 
-                <View style={{ display: "flex", gap: 10 }}>
-                    {employeesData.map((employee) => (
-                        <EmployeeCard key={employee.id} {...employee} />
-                    ))}
-                </View>
+                {employees && employees.length > 0 ? (
+                    <View style={{ display: "flex", gap: 10 }}>
+                        {employees.map((employee) => (
+                            <EmployeeCard key={employee.id} {...employee} />
+                        ))}
+                    </View>
+                ) : (
+                    <Text>Không có nhân viên</Text>
+                )}
 
                 {/* thêm nhân viên  */}
                 <AntDesign
@@ -600,27 +713,95 @@ export default function ManagerHotel({ route, navigation }) {
                         <Modal.CloseButton />
                         <Modal.Header>Tạo tài khoản nhân viên</Modal.Header>
                         <Modal.Body>
-                            <FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={formEmployeeError.email}
+                            >
                                 <FormControl.Label>Email</FormControl.Label>
-                                <Input placeholder="example@gmail.com" />
+                                <Input
+                                    placeholder="example@gmail.com"
+                                    defaultValue={formEmployeeData.email}
+                                    onChangeText={(text) =>
+                                        setFormEmployeeData({
+                                            ...formEmployeeData,
+                                            email: text,
+                                        })
+                                    }
+                                />
+                                <FormControl.ErrorMessage>
+                                    {formEmployeeError.email}
+                                </FormControl.ErrorMessage>
                             </FormControl>
-                            <FormControl mt="3">
+                            <FormControl
+                                mt="3"
+                                isRequired
+                                isInvalid={formEmployeeError.password}
+                            >
                                 <FormControl.Label>Mật khẩu</FormControl.Label>
-                                <Input placeholder="******" type="password" />
+                                <Input
+                                    placeholder="******"
+                                    type="password"
+                                    defaultValue={formEmployeeData.password}
+                                    onChangeText={(text) =>
+                                        setFormEmployeeData({
+                                            ...formEmployeeData,
+                                            password: text,
+                                        })
+                                    }
+                                />
                             </FormControl>
-                            <FormControl mt="3">
+                            <FormControl
+                                mt="3"
+                                isRequired
+                                isInvalid={formEmployeeError.first_name}
+                            >
                                 <FormControl.Label>Họ</FormControl.Label>
-                                <Input placeholder="" />
+                                <Input
+                                    placeholder=""
+                                    defaultValue={formEmployeeData.first_name}
+                                    onChangeText={(text) =>
+                                        setFormEmployeeData({
+                                            ...formEmployeeData,
+                                            first_name: text,
+                                        })
+                                    }
+                                />
                             </FormControl>
-                            <FormControl mt="3">
+                            <FormControl
+                                mt="3"
+                                isRequired
+                                isInvalid={formEmployeeError.last_name}
+                            >
                                 <FormControl.Label>Tên</FormControl.Label>
-                                <Input placeholder="" />
+                                <Input
+                                    placeholder=""
+                                    defaultValue={formEmployeeData.name}
+                                    onChangeText={(text) =>
+                                        setFormEmployeeData({
+                                            ...formEmployeeData,
+                                            last_name: text,
+                                        })
+                                    }
+                                />
                             </FormControl>
-                            <FormControl mt="3">
+                            <FormControl
+                                mt="3"
+                                isRequired
+                                isInvalid={formEmployeeError.phone_num}
+                            >
                                 <FormControl.Label>
                                     Số điện thoại
                                 </FormControl.Label>
-                                <Input placeholder="" />
+                                <Input
+                                    placeholder=""
+                                    defaultValue={formEmployeeData.phone_num}
+                                    onChangeText={(text) =>
+                                        setFormEmployeeData({
+                                            ...formEmployeeData,
+                                            phone_num: text,
+                                        })
+                                    }
+                                />
                             </FormControl>
                         </Modal.Body>
                         <Modal.Footer>
@@ -635,8 +816,8 @@ export default function ManagerHotel({ route, navigation }) {
                                     Hủy
                                 </Button>
                                 <Button
-                                    onPress={() => {
-                                        setShowEmployeeModal(false);
+                                    onPress={async () => {
+                                        handleSubmitEmployeeForm();
                                     }}
                                 >
                                     Lưu
@@ -689,6 +870,14 @@ export default function ManagerHotel({ route, navigation }) {
                                 onChangeText={(text) => setEditHotelLogo(text)}
                             />
                         </FormControl>
+                        <FormControl mt="3">
+                            <Button
+                                colorScheme="red"
+                                onPress={() => setIsDeleteHotel(true)}
+                            >
+                                Xóa khách sạn
+                            </Button>
+                        </FormControl>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button.Group space={2}>
@@ -726,6 +915,15 @@ export default function ManagerHotel({ route, navigation }) {
                                             );
                                             setIsEditHotel(false);
                                             increaseCount();
+                                        } else {
+                                            const data = await response.json();
+                                            if (data.message) {
+                                                alert(data.message);
+                                            } else {
+                                                alert(
+                                                    "Đã xảy ra lỗi khi chỉnh sửa thông tin khách sạn"
+                                                );
+                                            }
                                         }
                                     } catch (error) {
                                         console.error(error);
@@ -737,6 +935,69 @@ export default function ManagerHotel({ route, navigation }) {
                                 }}
                             >
                                 Lưu
+                            </Button>
+                        </Button.Group>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal>
+
+            {/* alert dialog xóa khách sạn  */}
+            <Modal
+                isOpen={isDeleteHotel}
+                onClose={() => setIsDeleteHotel(false)}
+            >
+                <Modal.Content maxWidth="400px">
+                    <Modal.CloseButton />
+                    <Modal.Header>Xác nhận xóa khách sạn</Modal.Header>
+                    <Modal.Body>
+                        <Text>Bạn có chắc chắn muốn xóa khách sạn này?</Text>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button.Group space={2}>
+                            <Button
+                                variant="ghost"
+                                colorScheme="blueGray"
+                                onPress={() => {
+                                    setIsDeleteHotel(false);
+                                }}
+                            >
+                                Hủy
+                            </Button>
+                            <Button
+                                colorScheme="red"
+                                onPress={async () => {
+                                    try {
+                                        const response = await fetch(
+                                            `${BASE_URL}/api/hotel/${hotel_id}`,
+                                            {
+                                                method: "DELETE",
+                                            }
+                                        );
+                                        if (response.ok) {
+                                            alert("Xóa khách sạn thành công");
+                                            setIsDeleteHotel(false);
+                                            increaseCount();
+                                            navigation.navigate("Manager");
+                                        } else {
+                                            const data = await response.json();
+                                            if (data.message) {
+                                                alert(data.message);
+                                            } else {
+                                                alert(
+                                                    "Đã xảy ra lỗi khi xóa khách sạn"
+                                                );
+                                            }
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        alert(
+                                            "Đã xảy ra lỗi khi xóa khách sạn"
+                                        );
+                                    }
+                                    setIsDeleteHotel(false);
+                                }}
+                            >
+                                Xóa
                             </Button>
                         </Button.Group>
                     </Modal.Footer>

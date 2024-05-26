@@ -26,7 +26,6 @@ export default function MangerHome({ navigation }) {
                 );
                 const data = await response.json();
                 setHotels(data);
-                console.log("Hotels:", data);
             } catch (error) {
                 console.error("Failed to get hotels:", error);
             }

@@ -100,7 +100,6 @@ class UserController:
             "role": user_role,
             "role_id": str(role_id)
         }
-    
 
 
         

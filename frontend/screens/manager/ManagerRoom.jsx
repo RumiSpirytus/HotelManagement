@@ -40,7 +40,6 @@ export default function ManagerRoom({ navigation, route }) {
             try {
                 const response = await fetch(`${BASE_URL}/api/room/${room_id}`);
                 const data = await response.json();
-                console.log(data);
                 setRoom(data);
                 setEditName(data.name);
                 setEditDescription(data.room_detail);
@@ -112,6 +111,13 @@ export default function ManagerRoom({ navigation, route }) {
                                             alert("Chỉnh sửa logo thành công.");
                                             setIsEditLogo(false);
                                             increaseCount();
+                                        } else {
+                                            const data  = await response.json();
+                                            if (data.message) {
+                                                alert(data.message);
+                                            } else {
+                                                alert("Đã xảy ra lỗi khi chỉnh sửa logo.");
+                                            }
                                         }
                                     } catch (error) {
                                         console.error(error);
@@ -304,6 +310,15 @@ export default function ManagerRoom({ navigation, route }) {
                                                     );
                                                     setIsEditDetail(false);
                                                     increaseCount();
+                                                } else {
+                                                    const data = await response.json();
+                                                    if (data.message) {
+                                                        alert(data.message);
+                                                    } else {
+                                                        alert(
+                                                            "Đã xảy ra lỗi khi chỉnh sửa thông tin phòng"
+                                                        );
+                                                    }
                                                 }
                                             } catch (error) {
                                                 console.error(error);

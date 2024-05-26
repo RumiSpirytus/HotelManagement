@@ -28,6 +28,13 @@ const BookingDetail = ({ navigation, route }) => {
                 increaseCount();
                 alert("Hủy đặt phòng thành công");
                 navigation.navigate("Booking");
+            } else {
+                const data = await response.json();
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert("Hủy đặt phòng thất bại");
+                }
             }
         } catch (err) {
             console.log(err);
@@ -40,7 +47,6 @@ const BookingDetail = ({ navigation, route }) => {
     useEffect(() => {
         getBookingDetail(booking_id).then((data) => {
             setBookingDetail(data);
-            console.log(data);
         });
     }, []);
 

@@ -40,6 +40,12 @@ export default function Home({ navigation }) {
                 if (response.ok) {
                     const data = await response.json();
                     setAvailableRooms(data);
+                } else {
+                    const data = await response.json();
+                    if (data.message) {
+                        alert(data.message);} else {
+                        alert("Không thể lấy dữ liệu phòng");
+                        }
                 }
             } catch (error) {
                 console.error(error);
@@ -51,6 +57,13 @@ export default function Home({ navigation }) {
                 if (response.ok) {
                     const data = await response.json();
                     setPopularHotel(data);
+                } else {
+                    const data = await response.json();
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert("Không thể lấy dữ liệu khách sạn");
+                    }
                 }
             } catch (error) {
                 console.error(error);
@@ -89,7 +102,12 @@ export default function Home({ navigation }) {
                 if (response.ok) {
                     const data = await response.json();
                     setSearchRooms(data);
-                    console.log(data);
+                } else {
+                    const data = await response.json();
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert("Không thể tìm kiếm phòng");}
                 }
             } catch (error) {
                 console.error(error);

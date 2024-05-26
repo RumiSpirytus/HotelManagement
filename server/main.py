@@ -8,7 +8,7 @@ from models.room import Room
 from models.booking import Booking
 from models.payment import Payment
 from database import Base, engine
-from routes import roomRouter, userRouter, hotelRouter, searchRouter, bookingRouter, customerRouter
+from routes import roomRouter, userRouter, hotelRouter, searchRouter, bookingRouter, customerRouter, employeeRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
@@ -21,6 +21,7 @@ app.include_router(roomRouter.router, prefix='/api')
 app.include_router(searchRouter.router, prefix='/api')
 app.include_router(bookingRouter.router, prefix='/api')
 app.include_router(customerRouter.router, prefix='/api')
+app.include_router(employeeRouter.router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,

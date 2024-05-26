@@ -171,8 +171,6 @@ const RoomDetail = ({ navigation, route }) => {
                 updated_at: new Date(),
             };
 
-            console.log(formData);
-
             try {
                 const response = await fetch(`${BASE_URL}/api/booking`, {
                     method: "POST",
@@ -186,7 +184,11 @@ const RoomDetail = ({ navigation, route }) => {
                     alert("Đặt phòng thành công");
                     increaseCount();
                 } else {
-                    alert("Đặt phòng thất bại");
+                    const data = await response.json();
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert("Đặt phòng thất bại");}
                 }
             } catch (err) {
                 console.log(err);

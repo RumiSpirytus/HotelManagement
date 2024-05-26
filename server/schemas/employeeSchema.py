@@ -14,15 +14,27 @@ class EmployeeSchema(BaseModel):
 
     class Config:
         orm_mode = True
+        
+class EmployeeCreateSchema(BaseModel):
+    manager_id: str
+    hotel_id: str
+    email: str
+    password: str
+    role: str = "EMPLOYEE"
+    first_name: str
+    last_name: str
+    phone_num: str
+    created_at: datetime = datetime.now()
+    updated_at: datetime = datetime.now()
 
+    class Config:
+        orm_mode = True
+        
 class EmployeeUpdateSchema(BaseModel):
-    user_id: Optional[str]
-    hotel_id: Optional[str]
-    manager_id: Optional[str]
-    first_name: Optional[str]
-    last_name: Optional[str]
-    phone_num: Optional[str]
-    created_at: Optional[datetime]
+    password: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone_num: Optional[str] = None
     updated_at: datetime = datetime.now()
 
     class Config:

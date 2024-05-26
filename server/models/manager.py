@@ -15,4 +15,4 @@ class Manager(Base):
 
     hotel = relationship("Hotel", back_populates="manager")
     user = relationship("User", back_populates="manager")
-    employee = relationship("Employee", back_populates="manager")
+    employee = relationship("Employee", back_populates="manager", cascade="all, delete")

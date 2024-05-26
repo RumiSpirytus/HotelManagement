@@ -6,10 +6,9 @@ import {
     FormControl,
     Input,
     TextArea,
-    Image,
 } from "native-base";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 
 import { BASE_URL } from "../../utils";
 
@@ -105,10 +104,25 @@ export default function RegisterHotel({ navigation }) {
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
+                    setData({
+                        name: "",
+                        description: "",
+                        address: "",
+                        rating: 0,
+                        logo: "",
+                        images: "",
+                    });
+
                     increaseCount();
                     alert("Khách sạn đã được đăng ký thành công.");
                     navigation.navigate("Manager");
+                } else {
+                    const data = await response.json();
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert("Đã xảy ra lỗi khi đăng ký khách sạn.");
+                    }
                 }
             } catch (error) {
                 console.error("Error:", error);

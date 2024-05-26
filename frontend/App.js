@@ -205,7 +205,7 @@ function MyTabs() {
                         tabBarIcon: () => (
                             <AntDesign
                                 name="pluscircle"
-                                size={24}
+                                size={20}
                                 color="black"
                             />
                         ),
