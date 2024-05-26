@@ -25,7 +25,7 @@ export default function Home({ navigation }) {
     const [searchRooms, setSearchRooms] = useState(null);
     const [popularHotel, setPopularHotel] = useState([]);
 
-    // search 
+    // search
     const [handleSearch, setHandleSearch] = useState(false);
     const [formRoomName, setFormRoomName] = useState("");
     const [formHotelAddress, setFormHotelAddress] = useState("");
@@ -43,9 +43,10 @@ export default function Home({ navigation }) {
                 } else {
                     const data = await response.json();
                     if (data.message) {
-                        alert(data.message);} else {
+                        alert(data.message);
+                    } else {
                         alert("Không thể lấy dữ liệu phòng");
-                        }
+                    }
                 }
             } catch (error) {
                 console.error(error);
@@ -107,7 +108,8 @@ export default function Home({ navigation }) {
                     if (data.message) {
                         alert(data.message);
                     } else {
-                        alert("Không thể tìm kiếm phòng");}
+                        alert("Không thể tìm kiếm phòng");
+                    }
                 }
             } catch (error) {
                 console.error(error);
@@ -195,33 +197,37 @@ export default function Home({ navigation }) {
                 </StyledView>
 
                 {/* kết quả tìm kiếm  */}
-                {searchRooms ? <StyledView className="flex flex-col gap-4 p-4">
-                    <StyledView>
-                        <StyledText className=" text-lg font-semibold text-red-500">
-                            Kết quả tìm kiếm
-                        </StyledText>
-                    </StyledView>
-
-                    <ScrollView horizontal>
-                        <StyledView className="flex flex-row">
-                            {searchRooms && searchRooms.length > 0 ? (
-                                searchRooms.map((room) => (
-                                    <AvailableRoom
-                                        key={room.id}
-                                        image={room.logo}
-                                        name={room.name}
-                                        address={room.address}
-                                        price={room.price}
-                                        navigation={navigation}
-                                        id={room.id}
-                                    />
-                                ))
-                            ) : (
-                                <StyledText>Không tìm thấy kết quả</StyledText>
-                            )}
+                {searchRooms ? (
+                    <StyledView className="flex flex-col gap-4 p-4">
+                        <StyledView>
+                            <StyledText className=" text-lg font-semibold text-red-500">
+                                Kết quả tìm kiếm
+                            </StyledText>
                         </StyledView>
-                    </ScrollView>
-                </StyledView> : null}
+
+                        <ScrollView horizontal>
+                            <StyledView className="flex flex-row">
+                                {searchRooms && searchRooms.length > 0 ? (
+                                    searchRooms.map((room) => (
+                                        <AvailableRoom
+                                            key={room.id}
+                                            image={room.logo}
+                                            name={room.name}
+                                            address={room.address}
+                                            price={room.price}
+                                            navigation={navigation}
+                                            id={room.id}
+                                        />
+                                    ))
+                                ) : (
+                                    <StyledText>
+                                        Không tìm thấy kết quả
+                                    </StyledText>
+                                )}
+                            </StyledView>
+                        </ScrollView>
+                    </StyledView>
+                ) : null}
 
                 {/* Phòng còn trống */}
                 <StyledView className="flex flex-col gap-4 p-4">

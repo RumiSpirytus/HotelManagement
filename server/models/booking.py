@@ -18,6 +18,7 @@ class Booking(Base):
     customer_name = Column(String, nullable=False)
     customer_email = Column(String, nullable=False)
     customer_phone = Column(String, nullable=False)
+    status = Column(String)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 

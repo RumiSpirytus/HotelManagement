@@ -30,4 +30,4 @@ class Room(Base):
     updated_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 
     hotel = relationship("Hotel", back_populates="room")
-    booking = relationship("Booking", back_populates="room")
+    booking = relationship("Booking", back_populates="room", cascade="all, delete-orphan")

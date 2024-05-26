@@ -230,6 +230,7 @@ function MyTabs() {
                     }}
                 />
             ) : null}
+            
         </Tab.Navigator>
     );
 }

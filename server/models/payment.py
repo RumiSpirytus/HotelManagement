@@ -10,8 +10,7 @@ class Payment(Base):
     booking_id = Column(Uuid, ForeignKey('booking.id'), nullable=False)
     employee_id = Column(Uuid, ForeignKey('employee.id'), nullable=False)
     amount = Column(Float, nullable=False)
-    payment_date = Column(TIMESTAMP(timezone=True), nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+    payment_date = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 
     customer = relationship("Customer", back_populates="payment")

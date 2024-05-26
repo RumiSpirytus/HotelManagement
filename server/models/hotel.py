@@ -24,7 +24,7 @@ class Hotel(Base):
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     updated_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 
-    room = relationship("Room", back_populates="hotel")
+    room = relationship("Room", back_populates="hotel", cascade="all, delete")
     manager = relationship("Manager", back_populates="hotel")
     employee = relationship("Employee", back_populates="hotel")
 

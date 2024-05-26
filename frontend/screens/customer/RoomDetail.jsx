@@ -167,6 +167,7 @@ const RoomDetail = ({ navigation, route }) => {
                 customer_name: formName,
                 customer_email: formEmail,
                 customer_phone: formPhone,
+                status: "PENDING",
                 created_at: new Date(),
                 updated_at: new Date(),
             };
@@ -181,14 +182,17 @@ const RoomDetail = ({ navigation, route }) => {
                 });
 
                 if (response.ok) {
-                    alert("Đặt phòng thành công");
+                    alert(
+                        "Đặt phòng thành công, nhân viên sẽ liên hệ với bạn qua điện thoại để xác nhận."
+                    );
                     increaseCount();
                 } else {
                     const data = await response.json();
                     if (data.message) {
                         alert(data.message);
                     } else {
-                        alert("Đặt phòng thất bại");}
+                        alert("Đặt phòng thất bại");
+                    }
                 }
             } catch (err) {
                 console.log(err);
@@ -416,18 +420,31 @@ const RoomDetail = ({ navigation, route }) => {
 
                 <Center style={{ marginTop: 10 }}>
                     {!isBooked ? (
-                        <Button
-                            onPress={() => {
-                                if (user) {
-                                    setShowModal(true);
-                                } else {
-                                    navigation.navigate("Login");
-                                }
-                            }}
-                            style={{ width: 250, marginBottom: 40 }}
-                        >
-                            Đặt phòng ngay
-                        </Button>
+                        room.is_hired ? (
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: "bold",
+                                    color: "red",
+                                    marginBottom: 40,
+                                }}
+                            >
+                                Phòng đã được thuê
+                            </Text>
+                        ) : (
+                            <Button
+                                onPress={() => {
+                                    if (user) {
+                                        setShowModal(true);
+                                    } else {
+                                        navigation.navigate("Login");
+                                    }
+                                }}
+                                style={{ width: 250, marginBottom: 40 }}
+                            >
+                                Đặt phòng ngay
+                            </Button>
+                        )
                     ) : (
                         <Text
                             style={{
