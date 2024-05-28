@@ -17,7 +17,6 @@ export const UserProvider = ({ children }) => {
     // Add a function to log out the user
     const logoutUser = () => {
         setUser(null);
-        setCount(0);
         setUserInfo(null);
     };
 

@@ -18,9 +18,15 @@ import { useState, useEffect } from "react";
 import AvailableRoom from "../../components/customer/AvailableRoom";
 import PopularHotel from "../../components/customer/PopularHotel";
 
+import UserContext from "../../contexts/UserContext";
+import { useContext } from "react";
+
 import { BASE_URL } from "../../utils";
 
 export default function Home({ navigation }) {
+
+    const {count, increaseCount} = useContext(UserContext);
+
     const [availableRooms, setAvailableRooms] = useState([]);
     const [searchRooms, setSearchRooms] = useState(null);
     const [popularHotel, setPopularHotel] = useState([]);
@@ -73,7 +79,7 @@ export default function Home({ navigation }) {
 
         fetchPopularHotel();
         fetchAvailableRooms();
-    }, []);
+    }, [count]);
 
     useEffect(() => {
         const search_room = async () => {
@@ -120,7 +126,7 @@ export default function Home({ navigation }) {
             search_room();
             setHandleSearch(false);
         }
-    }, [handleSearch]);
+    }, [handleSearch, count]);
 
     return (
         <ScrollView>
@@ -237,7 +243,7 @@ export default function Home({ navigation }) {
                         </StyledText>
                     </StyledView>
 
-                    <ScrollView horizontal>
+                    {availableRooms && availableRooms.length > 0 ? <ScrollView horizontal>
                         <StyledView className="flex flex-row">
                             {availableRooms.map((room) => (
                                 <AvailableRoom
@@ -251,7 +257,8 @@ export default function Home({ navigation }) {
                                 />
                             ))}
                         </StyledView>
-                    </ScrollView>
+                    </ScrollView> : <StyledText>Không có phòng còn trống</StyledText>}
+    
                 </StyledView>
 
                 {/* Khách sạn chất lượng  */}

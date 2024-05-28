@@ -20,6 +20,9 @@ import ManagerProfile from "./screens/manager/ManagerProfile";
 import ManagerHotel from "./screens/manager/ManagerHotel";
 import ManagerRoom from "./screens/manager/ManagerRoom";
 
+//employee
+import EmployeeHome from "./screens/employee/EmployeeHome";
+
 import { NativeBaseProvider, View } from "native-base";
 
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
@@ -48,7 +51,7 @@ export default function App() {
                         component={Login}
                         options={{ headerShown: false}}
                     /> */}
-                    
+
                                 <Stack.Screen
                                     name="Signup"
                                     component={Signup}
@@ -89,6 +92,11 @@ export default function App() {
                                     component={ManagerRoom}
                                     options={{ title: "Quản lý phòng" }}
                                 />
+                                <Stack.Screen
+                                    name="EmployeeHome"
+                                    component={EmployeeHome}
+                                    options={{ title: "Nhân viên" }}
+                                />
                             </Stack.Navigator>
                         </NavigationContainer>
                     </NativeBaseProvider>
@@ -110,7 +118,37 @@ function MyTabs() {
                 tabBarVisible: route.name !== "Login", // Hide tab bar on Login screen
             })}
         >
-            {!user || user.role === "customer" ? (
+            <Tab.Screen
+                name="Home"
+                component={Home}
+                options={{
+                    tabBarLabel: "Trang chủ",
+                    tabBarIcon: () => (
+                        <MaterialCommunityIcons
+                            name="home"
+                            color="#000"
+                            size={20}
+                        />
+                    ),
+                }}
+            />
+
+            <Tab.Screen
+                name="EmployeeHome"
+                component={EmployeeHome}
+                options={{
+                    tabBarLabel: "Nhân viên",
+                    tabBarIcon: () => (
+                        <MaterialIcons
+                            name="manage-accounts"
+                            color="#000"
+                            size={20}
+                        />
+                    ),
+                }}
+            />
+
+            {/* {!user || user.role === "customer" ? (
                 <Tab.Screen
                     name="Home"
                     component={Home}
@@ -125,7 +163,7 @@ function MyTabs() {
                         ),
                     }}
                 />
-            ) : null}
+            ) : null} */}
 
             {user && user.role === "customer" ? (
                 <Tab.Screen
@@ -230,7 +268,6 @@ function MyTabs() {
                     }}
                 />
             ) : null}
-            
         </Tab.Navigator>
     );
 }

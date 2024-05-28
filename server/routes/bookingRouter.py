@@ -14,6 +14,10 @@ async def get_all_bookings(page: int = 1, size: int = 10, db: Session = Depends(
 async def get_booking_by_id(id: str, db: Session = Depends(get_db)):
     return BookingController.getBookingById(id, db)
 
+@router.get("/hotel/{hotel_id}")
+async def get_booking_by_hotel_id(hotel_id: str, page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+    return BookingController.getBookingByHotelId(hotel_id, page, size, db)
+
 @router.post("")
 async def add_booking(booking: BookingSchema, db: Session = Depends(get_db)):
     return BookingController.addBooking(booking, db)

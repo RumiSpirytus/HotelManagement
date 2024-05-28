@@ -88,3 +88,7 @@ class HotelController:
                 "rating": hotel.rating,
             })
         return data
+    
+    def getHotelIdByEmployeeId(employee_id: uuid.UUID, db: Session = Depends(get_db)):
+        hotel = db.query(Hotel).join(Manager).filter(Manager.employee_id == employee_id).first()
+        return hotel.id

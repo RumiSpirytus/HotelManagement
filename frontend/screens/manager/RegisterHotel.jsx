@@ -239,7 +239,7 @@ export default function RegisterHotel({ navigation }) {
                         onChangeText={(value) =>
                             setData({ ...formData, rating: value })
                         }
-                        defaultValue={formData.rating}
+                        defaultValue={formData.rating.toString()}
                     />
                     <FormControl.ErrorMessage
                         _text={{

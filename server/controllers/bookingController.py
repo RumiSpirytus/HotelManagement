@@ -76,3 +76,7 @@ class BookingController:
         query.update(update_data)
         db.commit()
         return {"message": "Booking updated successfully"}
+    
+    def getBookingByHotelId(hotel_id: uuid.UUID, page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+        rooms = db.query(Room.id, Room.logo, Room.name, Hotel.address, Booking.id, Booking.customer_id, Booking.status, Booking.customer_email, Booking.customer_phone, Booking.customer_name).join(Room, Booking.room_id == Room.id).join(Hotel, Room.hotel_id == Hotel.id).filter(Hotel.id == hotel_id).offset((page-1)*size).limit(size).all()
+        return [{"room_id": room[0], "logo": room[1], "room_name": room[2], "hotel_address": room[3], "booking_id": room[4], "customer_id": room[5], "status": room[6], "customer_email": room[7], "customer_phone": room[8], "customer_name": room[9]} for room in rooms]

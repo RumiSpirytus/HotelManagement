@@ -55,10 +55,10 @@ class EmployeeController:
         return [{"id": employee[0], "email": employee[1], "phone_num": employee[2], "first_name": employee[3], "last_name": employee[4]} for employee in employees]
     
     def get_employee_by_id(employee_id: str, db: Session = Depends(get_db)):
-        employee = db.query(Employee.id, User.email, Employee.phone_num, Employee.first_name, Employee.last_name).join(User, User.id == Employee.user_id).filter(Employee.id == employee_id).first()
+        employee = db.query(Employee.id, User.email, Employee.phone_num, Employee.first_name, Employee.last_name, Employee.hotel_id).join(User, User.id == Employee.user_id).filter(Employee.id == employee_id).first()
         if not employee:
             return JSONResponse(status_code=404, content={"message":"Employee not found"})
-        return {"id": employee[0], "email": employee[1], "phone_num": employee[2], "first_name": employee[3], "last_name": employee[4]}
+        return {"id": employee[0], "email": employee[1], "phone_num": employee[2], "first_name": employee[3], "last_name": employee[4], "hotel_id": employee[5]}
     
     def update_employee(employee_id: str, user: EmployeeUpdateSchema, db: Session = Depends(get_db)):
         db_employee = db.query(Employee).filter(Employee.id == employee_id).first()
