@@ -51,7 +51,14 @@ const BookingDetail = ({ navigation, route }) => {
 
     useEffect(() => {
         getBookingDetail(booking_id).then((data) => {
-            setBookingDetail(data);
+            let first_room_id_section = data.room_id.split("-")[0];
+            let first_booking_id_section = data.id.split("-")[0];
+            
+            setBookingDetail({
+                ...data,
+                first_room_id_section,
+                first_booking_id_section
+            })
         });
     }, [count]);
 
@@ -137,11 +144,11 @@ const BookingDetail = ({ navigation, route }) => {
                             />
                             <DetailItem
                                 label="Mã phòng"
-                                value={bookingDetail.room_id}
+                                value={bookingDetail.first_room_id_section}
                             />
                             <DetailItem
                                 label="Mã đặt"
-                                value={bookingDetail.id}
+                                value={bookingDetail.first_booking_id_section}
                             />
                             <StatusItem
                                 label="Trạng thái"
@@ -203,6 +210,8 @@ const statusText = {
     PENDING: "Chờ xác nhận",
     CONFIRMED: "Đã xác nhận",
     CANCELLED: "Đã hủy",
+    CHECKED_IN: "Đã nhận phòng",
+    CHECKED_OUT: "Đã trả phòng",
 };
 
 const StatusItem = ({ label, value }) => (
@@ -220,7 +229,7 @@ const StatusItem = ({ label, value }) => (
                         ? "green"
                         : value === "CANCELLED"
                         ? "red"
-                        : "black",
+                        : "orange",
                 fontWeight: "bold",
             }}
         >
