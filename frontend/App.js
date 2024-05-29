@@ -22,6 +22,9 @@ import ManagerRoom from "./screens/manager/ManagerRoom";
 
 //employee
 import EmployeeHome from "./screens/employee/EmployeeHome";
+import EmployeeCheckin from "./screens/employee/EmployeeCheckin";
+import EmployeeReport from "./screens/employee/EmployeeReport";
+import Logout from "./screens/employee/Logout";
 
 import { NativeBaseProvider, View } from "native-base";
 
@@ -97,6 +100,22 @@ export default function App() {
                                     component={EmployeeHome}
                                     options={{ title: "Nhân viên" }}
                                 />
+
+                                <Stack.Screen
+                                    name="EmployeeCheckin"
+                                    component={EmployeeCheckin}
+                                    options={{ title: "Thanh toán" }}
+                                />
+                                <Stack.Screen
+                                    name="EmployeeReport"
+                                    component={EmployeeReport}
+                                    options={{ title: "Thống kê" }}
+                                />
+                                <Stack.Screen
+                                    name="Logout"
+                                    component={Logout}
+                                    options={{ title: "Đăng xuất" }}
+                                />
                             </Stack.Navigator>
                         </NavigationContainer>
                     </NativeBaseProvider>
@@ -107,7 +126,7 @@ export default function App() {
 }
 
 function MyTabs() {
-    const { user } = React.useContext(UserContext);
+    const { user, logoutUser } = React.useContext(UserContext);
 
     return (
         <Tab.Navigator
@@ -118,37 +137,7 @@ function MyTabs() {
                 tabBarVisible: route.name !== "Login", // Hide tab bar on Login screen
             })}
         >
-            <Tab.Screen
-                name="Home"
-                component={Home}
-                options={{
-                    tabBarLabel: "Trang chủ",
-                    tabBarIcon: () => (
-                        <MaterialCommunityIcons
-                            name="home"
-                            color="#000"
-                            size={20}
-                        />
-                    ),
-                }}
-            />
-
-            <Tab.Screen
-                name="EmployeeHome"
-                component={EmployeeHome}
-                options={{
-                    tabBarLabel: "Nhân viên",
-                    tabBarIcon: () => (
-                        <MaterialIcons
-                            name="manage-accounts"
-                            color="#000"
-                            size={20}
-                        />
-                    ),
-                }}
-            />
-
-            {/* {!user || user.role === "customer" ? (
+            {!user || user.role === "customer" ? (
                 <Tab.Screen
                     name="Home"
                     component={Home}
@@ -163,7 +152,7 @@ function MyTabs() {
                         ),
                     }}
                 />
-            ) : null} */}
+            ) : null}
 
             {user && user.role === "customer" ? (
                 <Tab.Screen
@@ -245,6 +234,75 @@ function MyTabs() {
                                 name="pluscircle"
                                 size={20}
                                 color="black"
+                            />
+                        ),
+                    }}
+                />
+            ) : null}
+
+            {/* employee menu  */}
+            {user && user.role === "employee" ? (
+                <Tab.Screen
+                    name="EmployeeHome"
+                    component={EmployeeHome}
+                    options={{
+                        tabBarLabel: "Đơn đặt phòng",
+                        tabBarIcon: () => (
+                            <MaterialIcons
+                                name="manage-accounts"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : null}
+
+            {user && user.role === "employee" ? (
+                <Tab.Screen
+                    name="EmployeeReport"
+                    component={EmployeeReport}
+                    options={{
+                        tabBarLabel: "Thống kê",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="chart-bar"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : null}
+
+            {user && user.role === "employee" ? (
+                <Tab.Screen
+                    name="EmployeeCheckin"
+                    component={EmployeeCheckin}
+                    options={{
+                        tabBarLabel: "Thanh toán",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="cash"
+                                color="#000"
+                                size={20}
+                            />
+                        ),
+                    }}
+                />
+            ) : null}
+
+            {user && user.role === "employee" ? (
+                <Tab.Screen
+                    name="Logout"
+                    component={Logout}
+                    options={{
+                        tabBarLabel: "Đăng xuất",
+                        tabBarIcon: () => (
+                            <MaterialCommunityIcons
+                                name="logout"
+                                color="#000"
+                                size={20}
                             />
                         ),
                     }}

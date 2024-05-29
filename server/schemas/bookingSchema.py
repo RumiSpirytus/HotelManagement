@@ -7,7 +7,8 @@ class BookingStatusType(str, Enum):
     PENDING = "PENDING"
     CONFIRMED = "CONFIRMED"
     CANCELLED = "CANCELLED"
-    CHECKEDIN = "CHECKINED"
+    CHECKED_IN = "CHECKED_IN"
+    CHECKED_OUT = "CHECKED_OUT"
 
 class BookingSchema(BaseModel):
     customer_id: str

@@ -70,6 +70,27 @@ class BookingController:
             room = db.query(Room).filter(Room.id == db_booking.room_id).first()
             room.is_hired = False
             db.commit()
+            
+        if booking.status == 'CONFIRMED':
+            room = db.query(Room).filter(Room.id == db_booking.room_id).first()
+            room.is_hired = True
+            db.commit()
+            
+        if booking.status == 'PENDING':
+            room = db.query(Room).filter(Room.id == db_booking.room_id).first()
+            room.is_hired = True
+            db.commit()
+            
+        if booking.status == 'CHECKED_IN':
+            room = db.query(Room).filter(Room.id == db_booking.room_id).first()
+            room.is_hired = True
+            db.commit()
+        
+        if booking.status == 'CHECKED_OUT':
+            room = db.query(Room).filter(Room.id == db_booking.room_id).first()
+            room.is_hired = False
+            db.commit()
+            
         
         update_data = booking.model_dump(exclude_unset=True)
         
@@ -80,3 +101,7 @@ class BookingController:
     def getBookingByHotelId(hotel_id: uuid.UUID, page: int = 1, size: int = 10, db: Session = Depends(get_db)):
         rooms = db.query(Room.id, Room.logo, Room.name, Hotel.address, Booking.id, Booking.customer_id, Booking.status, Booking.customer_email, Booking.customer_phone, Booking.customer_name).join(Room, Booking.room_id == Room.id).join(Hotel, Room.hotel_id == Hotel.id).filter(Hotel.id == hotel_id).offset((page-1)*size).limit(size).all()
         return [{"room_id": room[0], "logo": room[1], "room_name": room[2], "hotel_address": room[3], "booking_id": room[4], "customer_id": room[5], "status": room[6], "customer_email": room[7], "customer_phone": room[8], "customer_name": room[9]} for room in rooms]
+    
+    def getBookingCheckedInByHotelId(hotel_id: uuid.UUID, page: int = 1, size: int = 10, db: Session = Depends(get_db)):
+        rooms = db.query(Room.id, Room.logo, Room.name, Hotel.address, Booking.id, Booking.customer_id, Booking.status, Booking.customer_email, Booking.customer_phone, Booking.customer_name, Booking.check_in, Booking.guest_quantity, Room.price, Booking.customer_id).join(Room, Booking.room_id == Room.id).join(Hotel, Room.hotel_id == Hotel.id).filter(Hotel.id == hotel_id, Booking.status == 'CHECKED_IN').offset((page-1)*size).limit(size).all()
+        return [{"room_id": room[0], "logo": room[1], "room_name": room[2], "hotel_address": room[3], "booking_id": room[4], "customer_id": room[5], "status": room[6], "customer_email": room[7], "customer_phone": room[8], "customer_name": room[9], "check_in": room[10], "guest_quantity": room[11], "price": room[12], "customer_id": room[13]} for room in rooms]

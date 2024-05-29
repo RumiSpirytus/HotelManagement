@@ -97,3 +97,7 @@ class EmployeeController:
         db.delete(db_user)
         db.commit()
         return JSONResponse(status_code=200, content={"message":"Employee deleted successfully"})
+    
+    def getCountEmployeesByManagerId(manager_id: str, db: Session = Depends(get_db)):
+        employees = db.query(Employee).filter(Employee.manager_id == manager_id).all()
+        return len(employees)

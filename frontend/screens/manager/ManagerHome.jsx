@@ -14,7 +14,7 @@ import { BASE_URL } from "../../utils";
 
 export default function MangerHome({ navigation }) {
     const { user } = useContext(UserContext);
-    const {count} = useContext(ManagerContext);
+    const { count } = useContext(ManagerContext);
 
     const [hotels, setHotels] = useState([]);
 
@@ -29,10 +29,96 @@ export default function MangerHome({ navigation }) {
             } catch (error) {
                 console.error("Failed to get hotels:", error);
             }
-        }
+        };
 
         getHotels();
     }, [count]);
+
+    const [payments, setPayments] = useState([]);
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        const getHotelId = async () => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/api/hotel/manager/${user?.role_id}`
+                );
+                if (!response.ok) {
+                    alert("Lỗi lấy hotel_id");
+                }
+                const data = await response.json();
+                return data.id;
+            } catch (error) {
+                console.error("Get hotel_id error: ", error);
+                alert("Lỗi lấy hotel_id");
+            }
+        };
+
+        const getAllPayment = async () => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/api/payment/manager/${user?.role_id}`
+                );
+                if (!response.ok) {
+                    alert("Lỗi lấy payment");
+                    return []; // return an empty array when the request fails
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("Get all payment error: ", error);
+                alert("Lỗi lấy payment");
+                return []; // return an empty array when an error occurs
+            }
+        };
+
+        //get employees length
+        const getEmployees = async () => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/api/employee/count/manager/${user?.role_id}`
+                );
+                if (!response.ok) {
+                    alert("Lỗi lấy employees");
+                    return 0;
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("Get employees error: ", error);
+                alert("Lỗi lấy employees");
+                return 0;
+            }
+        };
+
+        getHotelId().then(() => {
+            getAllPayment().then((data) => {
+                setPayments(data);
+            });
+            getEmployees().then((data) => {
+                setEmployees(data);
+            });
+        }
+        );
+    }, [count]);
+
+    const totalRevenue = payments.reduce(
+        (total, payment) => {
+            return total + payment.amount;
+        },
+
+        0
+    );
+
+    const totalGuest = payments.reduce(
+        (total, payment) => {
+            return total + payment.guest_quantity;
+        },
+
+        0
+    );
+
+    
 
     return (
         <ScrollView
@@ -123,7 +209,7 @@ export default function MangerHome({ navigation }) {
                         Tổng doanh thu
                     </Text>
                     <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                        1.000.000 VNĐ
+                        {totalRevenue}
                     </Text>
                 </View>
 
@@ -158,7 +244,7 @@ export default function MangerHome({ navigation }) {
                         Số lượng khách hàng
                     </Text>
                     <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                        52.2K
+                        {totalGuest}
                     </Text>
                 </View>
 
@@ -195,7 +281,7 @@ export default function MangerHome({ navigation }) {
                     >
                         Số lượng nhân viên
                     </Text>
-                    <Text style={{ fontSize: 16, fontWeight: "600" }}>20</Text>
+                    <Text style={{ fontSize: 16, fontWeight: "600" }}>{employees}</Text>
                 </View>
             </View>
         </ScrollView>

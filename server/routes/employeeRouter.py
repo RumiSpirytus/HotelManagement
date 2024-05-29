@@ -26,3 +26,7 @@ def update_employee(employee_id: str, user: EmployeeUpdateSchema, db: Session = 
 @router.delete('/{employee_id}')
 def delete_employee(employee_id: str, db: Session = Depends(get_db)):
     return EmployeeController.delete_employee(employee_id, db)
+
+@router.get('/count/manager/{manager_id}')
+def get_employee_count_by_manager_id(manager_id: str, db: Session = Depends(get_db)):
+    return EmployeeController.getCountEmployeesByManagerId(manager_id, db)
