@@ -26,5 +26,5 @@ class Hotel(Base):
 
     room = relationship("Room", back_populates="hotel", cascade="all, delete")
     manager = relationship("Manager", back_populates="hotel")
-    employee = relationship("Employee", back_populates="hotel")
+    employee = relationship("Employee", back_populates="hotel", cascade="all, delete")
 

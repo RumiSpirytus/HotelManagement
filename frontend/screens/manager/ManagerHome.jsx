@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, FlatList, Image } from "native-base";
+import { Text, ScrollView, View, FlatList } from "native-base";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -109,6 +109,10 @@ export default function MangerHome({ navigation }) {
 
         0
     );
+    const totalRevenueUi = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+    }).format(totalRevenue);
 
     const totalGuest = payments.reduce(
         (total, payment) => {
@@ -209,7 +213,7 @@ export default function MangerHome({ navigation }) {
                         Tổng doanh thu
                     </Text>
                     <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                        {totalRevenue}
+                        {totalRevenueUi}
                     </Text>
                 </View>
 

@@ -15,7 +15,7 @@ import { useContext, useState, useEffect } from "react";
 
 import { BASE_URL } from "../../utils";
 
-import { Center, Box, Select, CheckIcon, VStack, Input } from "native-base";
+import { Center, Box, Select, CheckIcon } from "native-base";
 
 import { AntDesign } from "@expo/vector-icons";
 
@@ -154,7 +154,7 @@ export default function EmployeeHome() {
             />
             <TextInput
                 placeholder="Lọc theo mã đặt phòng"
-                value={filter.booking_id}
+                value={filter.booking_id.toString()}
                 onChangeText={(text) => handleFilterChange("booking_id", text)}
                 style={{ marginTop: 10,
                     marginBottom: 10,

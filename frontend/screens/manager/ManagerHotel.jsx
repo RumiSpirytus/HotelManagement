@@ -8,10 +8,7 @@ import {
     Button,
     FormControl,
     Input,
-    Checkbox,
 } from "native-base";
-
-import { TouchableOpacity } from "react-native";
 
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -26,27 +23,6 @@ import { BASE_URL } from "../../utils";
 
 import ManagerContext from "../../contexts/ManagerContext";
 import UserContext from "../../contexts/UserContext";
-
-const employeesData = [
-    {
-        id: 1,
-        first_name: "Nguyễn",
-        last_name: "Văn A",
-        phone_num: "0123456789",
-    },
-    {
-        id: 2,
-        first_name: "Nguyễn",
-        last_name: "Văn B",
-        phone_num: "0123456789",
-    },
-    {
-        id: 3,
-        first_name: "Nguyễn",
-        last_name: "Văn C",
-        phone_num: "0123456789",
-    },
-];
 
 export default function ManagerHotel({ route, navigation }) {
     const hotel_id = route.params.hotel_id;
@@ -424,7 +400,7 @@ export default function ManagerHotel({ route, navigation }) {
                     Danh sách phòng
                 </Text>
 
-                {rooms ? (
+                {rooms && rooms.length > 0 ? (
                     <View style={{ display: "flex", gap: 10 }}>
                         {rooms.map((room) => (
                             <HotelCard
@@ -440,7 +416,7 @@ export default function ManagerHotel({ route, navigation }) {
                             />
                         ))}
                     </View>
-                ) : null}
+                ) : <Text>Không có phòng</Text>}
 
                 {/* thêm phòng  */}
                 <AntDesign

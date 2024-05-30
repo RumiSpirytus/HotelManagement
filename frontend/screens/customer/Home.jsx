@@ -186,7 +186,7 @@ export default function Home({ navigation }) {
                                         <Input
                                             type="text"
                                             placeholder="Nhập giá tối đa"
-                                            value={formPrice}
+                                            value={formPrice.toString()}
                                             onChangeText={(text) =>
                                                 setFormPrice(text)
                                             }

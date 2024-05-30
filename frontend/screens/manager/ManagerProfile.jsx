@@ -107,7 +107,7 @@ export default function ManagerProfile() {
                 </Avatar>
 
                 <Text style={{ fontSize: 16, fontWeight: 600 }}>
-                    {`Chào mừng To Lam Son!`}
+                    {`Chào mừng ${firstName} ${lastName}!`}
                 </Text>
 
                 <MaterialIcons
